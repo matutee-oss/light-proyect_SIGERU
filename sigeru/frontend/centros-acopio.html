@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SiGeRU — Centros de Acopio</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+  <nav class="barra-navegacion">
+    <span class="logo">SiGeRU <span>MONTEVIDEO</span></span>
+    <div class="enlaces">
+      <a href="panel-admin.html">Panel</a>
+      <a href="usuarios.html">Usuarios</a>
+      <a href="contenedores.html">Contenedores</a>
+      <a href="camiones.html">Camiones</a>
+      <a href="centros-acopio.html">Centros de Acopio</a>
+    </div>
+  </nav>
+
+  <main>
+    <div class="eyebrow" style="margin-top: 40px;">Gestión de infraestructura</div>
+    <h2 style="font-size: 34px; margin-bottom: 24px;">Centros de Acopio y Maquinaria</h2>
+
+    <!-- FORMULARIO CENTRO -->
+    <section class="tarjeta">
+      <h2 style="font-size: 22px;" id="titulo-form-centro">Nuevo centro de acopio</h2>
+      <form id="form-centro" class="formulario">
+        <input type="hidden" id="centro-id">
+
+        <div class="campo">
+          <label for="c-nombre">Nombre</label>
+          <input type="text" id="c-nombre" required placeholder="Ej: Centro de Acopio Buceo">
+        </div>
+
+        <div class="campo">
+          <label for="c-ubicacion">Ubicación</label>
+          <input type="text" id="c-ubicacion" required placeholder="Ej: Rambla Rep. de México, Montevideo">
+        </div>
+
+        <div class="campo">
+          <label for="c-capacidad">Capacidad (toneladas)</label>
+          <input type="number" id="c-capacidad" required min="0.1" step="0.1" placeholder="500">
+        </div>
+
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <button type="submit" id="btn-guardar-centro">Guardar centro</button>
+          <button type="button" id="btn-cancelar-centro" style="display:none; background:none; border:1px solid var(--ink-soft); color:var(--ink); padding:10px 20px; border-radius:var(--radio); cursor:pointer;">Cancelar</button>
+        </div>
+      </form>
+      <div id="mensaje-centro"></div>
+    </section>
+
+    <!-- LISTADO DE CENTROS -->
+    <div id="lista-centros"></div>
+
+    <!-- MODAL AGREGAR RECURSO -->
+    <div id="modal-recurso" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:100; display:none; align-items:center; justify-content:center;">
+      <div style="background:var(--surface); border-radius:var(--radio); padding:32px; max-width:420px; width:90%; box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+        <h3 style="margin:0 0 20px; font-size:18px;">Agregar recurso / maquinaria</h3>
+        <form id="form-recurso" class="formulario">
+          <input type="hidden" id="recurso-centro-id">
+          <div class="campo">
+            <label for="r-tipo">Tipo de recurso</label>
+            <input type="text" id="r-tipo" required placeholder="Ej: Pala cargadora, Contenedores de repuesto">
+          </div>
+          <div class="campo">
+            <label for="r-cantidad">Cantidad</label>
+            <input type="number" id="r-cantidad" required min="0" value="1">
+          </div>
+          <div style="display:flex; gap:12px; flex-wrap:wrap;">
+            <button type="submit">Agregar recurso</button>
+            <button type="button" id="btn-cerrar-modal" style="background:none; border:1px solid var(--ink-soft); color:var(--ink); padding:10px 20px; border-radius:var(--radio); cursor:pointer;">Cancelar</button>
+          </div>
+        </form>
+        <div id="mensaje-recurso"></div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="pie-pagina">
+    <p>&copy; 2026 Light. Todos los derechos reservados.</p>
+    <p class="mono">SiGeRU · Sistema de Gestión de Residuos Urbanos</p>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/sesion.js"></script>
+  <script src="js/centros-acopio.js"></script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  # Base de datos MySQL
+  db:
+    image: mysql:8.0
+    container_name: sigeru_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: light
+      MYSQL_DATABASE: sigeru
+      MYSQL_USER: sigeru_user
+      MYSQL_PASSWORD: sigeru_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - sigeru_db_data:/var/lib/mysql
+      - ./sigeru.sql:/docker-entrypoint-initdb.d/sigeru.sql
+    networks:
+      - sigeru_net
+
+  # Backend PHP / Apache
+  backend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: sigeru_backend
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: sigeru
+      DB_USER: root
+      DB_PASS: light
+    volumes:
+      - ./backend:/var/www/html
+      - ./backend/uploads:/var/www/html/uploads
+    networks:
+      - sigeru_net
+
+  # Frontend estático con Nginx
+  frontend:
+    image: nginx:alpine
+    container_name: sigeru_frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html
+      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - sigeru_net
+
+  # phpMyAdmin (opcional, para administrar la BD)
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: sigeru_phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: light
+    depends_on:
+      - db
+    networks:
+      - sigeru_net
+
+volumes:
+  sigeru_db_data:
+
+networks:
+  sigeru_net:
+    driver: bridge

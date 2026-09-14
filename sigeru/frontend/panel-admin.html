@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SiGeRU — Panel de administración</title>
+  <link rel="stylesheet" href="css/estilos.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+</head>
+<body>
+
+  <nav class="barra-navegacion">
+    <span class="logo">SiGeRU <span>MONTEVIDEO</span></span>
+    <div class="enlaces">
+      <a href="panel-admin.html">Panel</a>
+      <a href="usuarios.html">Usuarios</a>
+      <a href="contenedores.html">Contenedores</a>
+      <a href="camiones.html">Camiones</a>
+      <a href="centros-acopio.html">Centros de Acopio</a>
+    </div>
+  </nav>
+
+  <main>
+    <div class="eyebrow" style="margin-top: 40px;">Administrador · Vista general</div>
+    <h2 style="font-size: 34px; margin-bottom: 24px;">Estado de la ciudad</h2>
+
+    <div class="franja-stats">
+      <div class="stat"><span class="numero" id="stat-zonas">–</span><span class="etiqueta">Zonas</span></div>
+      <div class="stat"><span class="numero" id="stat-contenedores">–</span><span class="etiqueta">Contenedores</span></div>
+      <div class="stat"><span class="numero" id="stat-camiones">–</span><span class="etiqueta">Camiones</span></div>
+      <div class="stat"><span class="numero" id="stat-usuarios">–</span><span class="etiqueta">Usuarios</span></div>
+      <div class="stat"><span class="numero" id="stat-incidencias">–</span><span class="etiqueta">Incidencias abiertas</span></div>
+    </div>
+
+    <section class="tarjeta">
+      <div class="eyebrow">Últimos 7 días</div>
+      <h2 style="font-size: 22px;">Progreso semanal</h2>
+      <div class="barra-progreso">
+        <div class="barra-progreso-relleno" id="barra-semanal" style="width: 0%"></div>
+      </div>
+      <p id="texto-semanal" style="margin-top: 12px; color: var(--ink-soft);">Cargando…</p>
+    </section>
+
+    <section class="tarjeta">
+      <h2 style="font-size: 22px;">Mapa operativo</h2>
+      <div id="mapa-contenedores" class="mapa"></div>
+      <div class="leyenda-mapa">
+        <span><i class="punto-leyenda" style="background:var(--clay)"></i> Contenedor desbordado</span>
+        <span><i class="punto-leyenda" style="background:var(--amber)"></i> Contenedor roto</span>
+        <span><i class="punto-leyenda" style="background:var(--petrol)"></i> Contenedor funcional</span>
+        <span><i class="punto-leyenda" style="background:#333"></i>🚛 Camión en servicio</span>
+        <span><i class="punto-leyenda" style="background:#666"></i>🏭 Centro de acopio</span>
+      </div>
+    </section>
+
+    <div class="grid-doble">
+      <section class="tarjeta">
+        <div class="eyebrow">Últimos 30 días</div>
+        <h2 style="font-size: 22px;">Zonas con más problemas</h2>
+        <div id="ranking-zonas"></div>
+      </section>
+
+      <section class="tarjeta">
+        <div class="eyebrow">Por tipo</div>
+        <h2 style="font-size: 22px;">Incidencias reportadas</h2>
+        <div id="grafico-tipos"></div>
+      </section>
+    </div>
+
+    <section class="tarjeta">
+      <div class="eyebrow">En vivo</div>
+      <h2 style="font-size: 22px;">Actividad reciente</h2>
+      <div id="feed-actividad"></div>
+    </section>
+
+    <section class="tarjeta">
+      <div class="eyebrow">Requiere atención</div>
+      <h2 style="font-size: 22px;">Usuarios pendientes de aprobación</h2>
+      <div id="lista-pendientes"></div>
+    </section>
+
+    <section class="tarjeta">
+      <div class="eyebrow">Comunicación</div>
+      <h2 style="font-size: 22px;">Publicar aviso</h2>
+      <form id="form-aviso" class="formulario">
+        <div class="campo">
+          <label for="aviso-titulo">Título</label>
+          <input type="text" id="aviso-titulo" required maxlength="150">
+        </div>
+        <div class="campo">
+          <label for="aviso-mensaje">Mensaje</label>
+          <input type="text" id="aviso-mensaje" required>
+        </div>
+        <div class="campo">
+          <label for="aviso-zona">Zona (opcional)</label>
+          <select id="aviso-zona">
+            <option value="">Toda la ciudad</option>
+          </select>
+        </div>
+        <button type="submit">Publicar</button>
+      </form>
+      <div id="mensaje-aviso"></div>
+
+      <h3 style="margin-top:24px; font-size:16px; color:var(--ink-soft);">Avisos vigentes</h3>
+      <div id="lista-avisos"></div>
+    </section>
+
+    <section class="tarjeta">
+      <div class="eyebrow">Gestión</div>
+      <h2 style="font-size: 22px;">Accesos rápidos</h2>
+      <div class="grilla-roles grilla-roles-3">
+        <a href="usuarios.html" class="tarjeta-rol" style="text-decoration:none;">
+          <div class="etiqueta-id mono">ABM</div>
+          <h3>Usuarios</h3>
+          <p>Alta, baja y edición de usuarios de todos los roles.</p>
+        </a>
+        <a href="centros-acopio.html" class="tarjeta-rol" style="text-decoration:none;">
+          <div class="etiqueta-id mono">ABM</div>
+          <h3>Centros de Acopio</h3>
+          <p>Gestión de centros y maquinaria básica.</p>
+        </a>
+        <a href="contenedores.html" class="tarjeta-rol" style="text-decoration:none;">
+          <div class="etiqueta-id mono">ABM</div>
+          <h3>Contenedores</h3>
+          <p>Alta, baja y edición de contenedores.</p>
+        </a>
+        <a href="camiones.html" class="tarjeta-rol" style="text-decoration:none;">
+          <div class="etiqueta-id mono">ABM</div>
+          <h3>Flota</h3>
+          <p>Alta, baja y edición de camiones.</p>
+        </a>
+        <div class="tarjeta-rol">
+          <div class="etiqueta-id mono">INFO</div>
+          <h3>Códigos de funcionario</h3>
+          <p>Se generan por ahora directo en la base de datos.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="tarjeta">
+      <h2 style="font-size: 22px;">Todos los usuarios</h2>
+      <table class="listado">
+        <thead>
+          <tr><th>Nombre</th><th>Email</th><th>Rol</th><th>Estado</th></tr>
+        </thead>
+        <tbody id="tabla-usuarios"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer class="pie-pagina">
+    <p>&copy; 2026 Light. Todos los derechos reservados.</p>
+    <p class="mono">SiGeRU · Sistema de Gestión de Residuos Urbanos</p>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/sesion.js"></script>
+  <script src="js/panel-admin.js"></script>
+</body>
+</html>

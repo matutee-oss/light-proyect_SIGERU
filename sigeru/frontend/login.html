@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SiGeRU — Iniciar sesión</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+  <nav class="barra-navegacion">
+    <span class="logo">SiGeRU <span>MONTEVIDEO</span></span>
+    <div class="enlaces">
+      <a href="index.html">Inicio</a>
+      <a href="registro.html">Registrarse</a>
+    </div>
+  </nav>
+
+  <main>
+    <div class="contenido-con-lateral" style="max-width: 900px; margin: 56px auto;">
+      <section class="tarjeta" style="margin: 0;">
+        <div class="eyebrow">Acceso al sistema</div>
+        <h2>Iniciar sesión</h2>
+
+        <form id="form-login" class="formulario">
+          <div class="campo">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+
+          <div class="campo">
+            <label for="password">Contraseña</label>
+            <input type="password" id="password" name="password" required>
+          </div>
+
+          <button type="submit">Ingresar</button>
+        </form>
+
+        <div id="mensaje-login"></div>
+      </section>
+
+      <aside class="lateral-imagen" aria-hidden="true">
+        <img src="img/lateral-login.jpg" alt="" onerror="this.onerror=null;this.src='img/placeholder.svg'">
+      </aside>
+    </div>
+  </main>
+
+  <footer class="pie-pagina">
+    <p>&copy; 2026 Light. Todos los derechos reservados.</p>
+    <p class="mono">SiGeRU · Sistema de Gestión de Residuos Urbanos</p>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/sesion.js"></script>
+  <script src="js/login.js"></script>
+</body>
+</html>
