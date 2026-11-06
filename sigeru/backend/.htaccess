@@ -1,0 +1,16 @@
+# Apache (XAMPP y Docker) a veces descarta el header Authorization antes de
+# llegar a PHP. Estas líneas lo pasan para que el token funcione.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+</IfModule>
+<IfModule mod_setenvif.c>
+    SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
+</IfModule>
+
+# No exponer archivos internos
+<FilesMatch "^(composer\.(json|lock)|phpunit\.xml)$">
+    Require all denied
+</FilesMatch>
+Options -Indexes
