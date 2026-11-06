@@ -2,16 +2,19 @@
 
 require_once __DIR__ . '/../models/Ruta.php';
 require_once __DIR__ . '/../models/Incidencia.php';
+require_once __DIR__ . '/RecoleccionController.php';
 
 class CuadrillaController
 {
     private Ruta $modeloRuta;
     private Incidencia $modeloIncidencia;
+    private RecoleccionController $recolecciones;
 
     public function __construct(PDO $conexion)
     {
         $this->modeloRuta = new Ruta($conexion);
         $this->modeloIncidencia = new Incidencia($conexion);
+        $this->recolecciones = new RecoleccionController($conexion);
     }
 
     public function obtenerPanel(int $idCuadrilla): array
@@ -37,14 +40,33 @@ class CuadrillaController
         ];
     }
 
-    public function marcarParada(int $idCuadrilla, int $idRuta, int $idContenedor, bool $atendido): array
+    /**
+     * Al marcar una parada como atendida se registra la recolección (API de
+     * recolección): el contenedor queda vacío y se resuelven sus desbordes.
+     */
+    public function marcarParada(array $cuadrilla, int $idRuta, int $idContenedor, bool $atendido, ?float $kg = null): array
     {
+        $idCuadrilla = (int) $cuadrilla['id_usuario'];
         if (!$this->modeloRuta->pertenece($idRuta, $idCuadrilla)) {
             return ['exito' => false, 'mensaje' => 'Esa ruta no está asignada a tu cuadrilla'];
         }
 
-        $this->modeloRuta->marcarParada($idRuta, $idContenedor, $atendido);
-        return ['exito' => true, 'mensaje' => $atendido ? 'Contenedor marcado como atendido' : 'Marcado como pendiente'];
+        if ($atendido) {
+            $resultado = $this->recolecciones->registrar($cuadrilla, [
+                'id_contenedor'   => $idContenedor,
+                'id_ruta'         => $idRuta,
+                'kg_recolectados' => $kg,
+            ]);
+            // Si ya estaba registrada (se destildó y volvió a tildar) alcanza con marcar la parada
+            if (!$resultado['exito'] && ($resultado['codigo'] ?? 0) !== 409) {
+                return $resultado;
+            }
+            $this->modeloRuta->marcarParada($idRuta, $idContenedor, true);
+            return ['exito' => true, 'mensaje' => $resultado['exito'] ? $resultado['mensaje'] : 'Contenedor marcado como atendido'];
+        }
+
+        $this->modeloRuta->marcarParada($idRuta, $idContenedor, false);
+        return ['exito' => true, 'mensaje' => 'Marcado como pendiente'];
     }
 
     public function generarRutaDemo(int $idCuadrilla): array

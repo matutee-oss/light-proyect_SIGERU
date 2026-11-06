@@ -24,10 +24,11 @@ switch ($_SERVER['REQUEST_METHOD']) {
 
         if ($accion === 'marcar_parada') {
             $resultado = $controlador->marcarParada(
-                $idCuadrilla,
+                $usuarioAutenticado,
                 (int) ($datos['id_ruta'] ?? 0),
                 (int) ($datos['id_contenedor'] ?? 0),
-                (bool) ($datos['atendido'] ?? false)
+                (bool) ($datos['atendido'] ?? false),
+                isset($datos['kg_recolectados']) && $datos['kg_recolectados'] !== '' ? (float) $datos['kg_recolectados'] : null
             );
         } elseif ($accion === 'generar_demo') {
             $resultado = $controlador->generarRutaDemo($idCuadrilla);
@@ -35,7 +36,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
             responderJson(400, ['mensaje' => 'Acción no reconocida']);
         }
 
-        responderJson($resultado['exito'] ? 200 : 400, $resultado);
+        responderResultado($resultado);
         break;
 
     default:
