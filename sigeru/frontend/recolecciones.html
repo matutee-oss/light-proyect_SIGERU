@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SiGeRU — Recolección</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+  <nav class="barra-navegacion">
+    <span class="logo">SiGeRU <span>MONTEVIDEO</span></span>
+    <div class="enlaces"></div>
+  </nav>
+
+  <main class="ancho">
+    <div class="encabezado-pagina">
+      <div>
+        <div class="eyebrow">API de recolección</div>
+        <h2>Recolección de residuos</h2>
+        <p>Registrá cada vaciado de contenedor. El sistema deja el contenedor en 0 %, resuelve los desbordes pendientes y le avisa a los vecinos que los reportaron.</p>
+      </div>
+    </div>
+
+    <div class="grilla-kpi" id="kpis-recoleccion"></div>
+
+    <div class="grid-doble">
+      <section class="tarjeta">
+        <div class="eyebrow">Nuevo registro</div>
+        <h2 style="font-size:22px;">Registrar recolección</h2>
+        <form id="form-recoleccion" class="formulario-grilla">
+          <label class="ancho-completo">Contenedor
+            <select id="r-contenedor" class="control" required></select>
+          </label>
+          <label>Kilos recolectados
+            <input type="number" id="r-kg" class="control" min="0" max="3000" step="0.5" placeholder="Ej.: 320">
+          </label>
+          <label>Camión
+            <select id="r-camion" class="control"><option value="">Sin indicar</option></select>
+          </label>
+          <label class="ancho-completo">Observaciones
+            <input type="text" id="r-observaciones" class="control" maxlength="255" placeholder="Opcional">
+          </label>
+          <div class="ancho-completo">
+            <button type="submit" class="boton-chico">Registrar recolección</button>
+          </div>
+        </form>
+        <div id="mensaje-recoleccion"></div>
+      </section>
+
+      <section class="tarjeta">
+        <div class="eyebrow">Últimos 14 días</div>
+        <h2 style="font-size:22px;">Kilos recolectados por día</h2>
+        <div class="grafico-barras" id="grafico-kg"></div>
+      </section>
+    </div>
+
+    <section class="tarjeta">
+      <div class="eyebrow">Sensores / reporte manual</div>
+      <h2 style="font-size:22px;">Nivel de llenado de los contenedores</h2>
+      <p style="color:var(--ink-soft); margin-top:0;">Al pasar el 80 % se avisa a administradores y cuadrillas; al llegar al 100 % el contenedor queda como desbordado.</p>
+      <div class="tabla-desplazable">
+        <table class="listado">
+          <thead><tr><th>Contenedor</th><th>Zona</th><th>Estado</th><th style="width:220px;">Nivel</th><th>Actualizar</th><th></th></tr></thead>
+          <tbody id="tabla-niveles"></tbody>
+        </table>
+      </div>
+      <div id="mensaje-niveles"></div>
+    </section>
+
+    <section class="tarjeta">
+      <div class="eyebrow">Historial</div>
+      <h2 style="font-size:22px;" id="titulo-historial">Recolecciones registradas</h2>
+      <div class="filtros" style="margin-bottom:16px;">
+        <label>Desde <input type="date" id="h-desde"></label>
+        <label>Hasta <input type="date" id="h-hasta"></label>
+        <label>Zona <select id="h-zona"><option value="">Todas</option></select></label>
+      </div>
+      <div class="tabla-desplazable">
+        <table class="listado">
+          <thead><tr><th>Fecha</th><th>Contenedor</th><th>Zona</th><th>Camión</th><th>Cuadrilla</th><th>Nivel previo</th><th>Kg</th><th></th></tr></thead>
+          <tbody id="tabla-historial"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pie-pagina">
+    <p>&copy; 2026 Light. Todos los derechos reservados.</p>
+    <p class="mono">SiGeRU · Sistema de Gestión de Residuos Urbanos</p>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/sesion.js"></script>
+  <script src="js/recolecciones.js"></script>
+</body>
+</html>

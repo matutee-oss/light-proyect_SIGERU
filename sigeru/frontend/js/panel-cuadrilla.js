@@ -31,7 +31,7 @@ function pintarMapaRuta(paradas) {
 
     L.marker([p.latitud, p.longitud], { icon: iconoNumerado(p.orden, p.atendido) })
       .addTo(mapaGlobal)
-      .bindPopup(`<strong>Parada ${p.orden}</strong><br>${p.ubicacion}<br>${p.tipo_residuo}<br>Estado: <b>${p.estado}</b>`);
+      .bindPopup(`<strong>Parada ${p.orden}</strong><br>${escaparHtml(p.ubicacion)}<br>${escaparHtml(p.tipo_residuo)}<br>Estado: <b>${escaparHtml(p.estado)}</b> · Nivel ${Number(p.nivel_llenado)} %`);
   });
 
   if (puntos.length > 1) {
@@ -53,9 +53,9 @@ function pintarChecklist(paradas) {
         <div style="display:flex; align-items:center; gap:14px; flex:1;">
           <span class="num-parada">${p.orden}</span>
           <div>
-            <strong style="${p.atendido ? 'text-decoration: line-through; opacity: 0.6;' : ''}">${p.ubicacion}</strong>
+            <strong style="${p.atendido ? 'text-decoration: line-through; opacity: 0.6;' : ''}">${escaparHtml(p.ubicacion)}</strong>
             <div class="mono" style="font-size:12px; color:var(--ink-soft); margin-top:2px;">
-              ${p.tipo_residuo} · <span class="etiqueta-estado estado-${p.estado}">${p.estado}</span>
+              ${escaparHtml(p.tipo_residuo)} · ${insigniaEstado(p.estado, 'contenedor')} · ${Number(p.nivel_llenado)} %
             </div>
           </div>
         </div>
@@ -67,17 +67,26 @@ function pintarChecklist(paradas) {
     `;
   }).join('');
 
+  // Al marcar una parada se registra la recolección (el contenedor queda vacío
+  // y se resuelven sus desbordes pendientes).
   contenedor.querySelectorAll('input[type="checkbox"]').forEach(function (chk) {
     chk.addEventListener('change', async function () {
-      await fetchAutenticado(`${API_URL}/panel_cuadrilla.php?accion=marcar_parada`, {
+      let kg = null;
+      if (chk.checked) {
+        const respuesta = prompt('Kilos recolectados (opcional, dejá vacío si no sabés):', '');
+        if (respuesta === null) { chk.checked = false; return; }
+        kg = respuesta.trim() === '' ? null : Number(respuesta.replace(',', '.'));
+      }
+      const { ok, datos } = await pedirJson(`${API_URL}/panel_cuadrilla.php?accion=marcar_parada`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+        cuerpo: {
           id_ruta: idRutaActual,
           id_contenedor: parseInt(chk.dataset.id),
-          atendido: chk.checked
-        })
+          atendido: chk.checked,
+          kg_recolectados: kg
+        }
       });
+      mostrarMensaje('mensaje-ruta', datos.mensaje || 'No se pudo actualizar la parada', ok ? 'exito' : 'error');
       cargarPanel();
     });
   });
@@ -94,9 +103,9 @@ function pintarIncidencias(lista, contenedorId, sonMias) {
     return `
       <div class="tarjeta-item">
         <div>
-          <strong>${i.contenedor_ubicacion}</strong>
+          <a href="incidencias.html?id=${i.id_incidencia}" style="text-decoration:none;"><strong>${escaparHtml(i.contenedor_ubicacion)}</strong></a>
           <div class="mono" style="font-size:12px; color:var(--ink-soft); margin-top:2px;">
-            ${i.tipo} · <span class="etiqueta-estado estado-${i.estado}">${i.estado}</span>
+            #${i.id_incidencia} · ${escaparHtml(etiqueta('tipo', i.tipo))} · ${insigniaPrioridad(i.prioridad)} ${insigniaEstado(i.estado)}
           </div>
         </div>
         ${sonMias
@@ -112,18 +121,19 @@ function pintarIncidencias(lista, contenedorId, sonMias) {
 
   contenedor.querySelectorAll('.btn-tomar').forEach(function (b) {
     b.addEventListener('click', async function () {
-      await fetchAutenticado(`${API_URL}/incidencias.php?id=${b.dataset.id}&accion=tomar`, { method: 'PUT' });
+      const { ok, datos } = await pedirJson(`${API_URL}/incidencias.php?id=${b.dataset.id}&accion=tomar`, { method: 'PUT' });
+      if (!ok) alert(datos.mensaje);
       cargarPanel();
     });
   });
 
   contenedor.querySelectorAll('.select-estado').forEach(function (s) {
     s.addEventListener('change', async function () {
-      await fetchAutenticado(`${API_URL}/incidencias.php?id=${s.dataset.id}&accion=estado`, {
+      const { ok, datos } = await pedirJson(`${API_URL}/incidencias.php?id=${s.dataset.id}&accion=estado`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ estado: s.value })
+        cuerpo: { estado: s.value }
       });
+      if (!ok) alert(datos.mensaje);
       cargarPanel();
     });
   });
@@ -140,9 +150,9 @@ async function cargarPanel() {
 
   const camion = document.getElementById('info-camion');
   if (datos.ruta && datos.ruta.camion_matricula) {
-    camion.innerHTML = `<strong>🚛 Matrícula: <span class="mono">${datos.ruta.camion_matricula}</span></strong>`;
+    camion.innerHTML = `<strong>🚛 Matrícula: <span class="mono">${escaparHtml(datos.ruta.camion_matricula)}</span></strong>`;
   } else if (datos.ruta) {
-    camion.innerHTML = `<p style="color:var(--ink-soft);">Ruta ${datos.ruta.nombre} · sin camión asignado</p>`;
+    camion.innerHTML = `<p style="color:var(--ink-soft);">Ruta ${escaparHtml(datos.ruta.nombre)} · sin camión asignado</p>`;
   } else {
     camion.innerHTML = `
       <p style="color:var(--ink-soft); margin-bottom: 14px;">No tenés ruta asignada para hoy.</p>
@@ -163,7 +173,7 @@ async function cargarPanel() {
     document.getElementById('lista-paradas').innerHTML = '';
   }
 
-  const mias = (datos.incidencias || []).filter(i => i.id_cuadrilla == sesion.usuario.id);
+  const mias = (datos.incidencias || []).filter(i => i.id_cuadrilla == sesion.usuario.id && i.estado !== 'resuelta');
   const disponibles = (datos.incidencias || []).filter(i => !i.id_cuadrilla);
 
   pintarIncidencias(mias, 'lista-mias', true);
