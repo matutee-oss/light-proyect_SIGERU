@@ -11,9 +11,7 @@
 
   <nav class="barra-navegacion">
     <span class="logo">SiGeRU <span>MONTEVIDEO</span></span>
-    <div class="enlaces">
-      <a href="login.html">Iniciar sesión</a>
-    </div>
+    <div class="enlaces"></div>
   </nav>
 
   <main>
@@ -79,13 +77,20 @@
             <option value="otro">Otro</option>
           </select>
         </div>
+        <div class="campo">
+          <label for="descripcion">Detalle (opcional)</label>
+          <input type="text" id="descripcion" maxlength="500" placeholder="Ej.: hay bolsas en la vereda">
+        </div>
         <button type="submit">Enviar reporte</button>
       </form>
       <div id="mensaje-reporte"></div>
     </section>
 
     <section class="tarjeta">
-      <h2 style="font-size: 22px;">Mis reportes anteriores</h2>
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:18px;">
+        <h2 style="font-size: 22px; margin:0;">Mis reportes anteriores</h2>
+        <a href="incidencias.html" class="boton-contorno" style="text-decoration:none;">Ver seguimiento completo →</a>
+      </div>
       <div id="lista-reportes"></div>
     </section>
   </main>

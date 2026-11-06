@@ -1,12 +1,6 @@
 const sesion = exigirSesion(['vecino']);
 let mapaGlobal = null;
 
-function colorSegunEstado(estado) {
-  if (estado === 'desbordado') return '#ad4d38';
-  if (estado === 'roto') return '#c97f24';
-  return '#1b4b43';
-}
-
 function pintarMotivacional(cantidad) {
   document.getElementById('numero-resueltos').textContent = cantidad;
 
@@ -22,7 +16,7 @@ function pintarMotivacional(cantidad) {
 
 function pintarSelectZonas(zonas, seleccionada) {
   const opciones = zonas.map(z =>
-    `<option value="${z.id_zona}" ${z.id_zona == seleccionada ? 'selected' : ''}>${z.nombre_zona}</option>`
+    `<option value="${z.id_zona}" ${z.id_zona == seleccionada ? 'selected' : ''}>${escaparHtml(z.nombre_zona)}</option>`
   ).join('');
   document.getElementById('select-zona').innerHTML = opciones;
 }
@@ -37,9 +31,9 @@ function pintarAvisos(avisos) {
     const zona = a.nombre_zona ? a.nombre_zona : 'Toda la ciudad';
     return `
       <div class="tarjeta-item" style="flex-direction:column; align-items:flex-start;">
-        <strong>${a.titulo}</strong>
-        <p style="margin: 4px 0; color: var(--ink-soft); font-size: 14px;">${a.mensaje}</p>
-        <span class="mono" style="font-size:11px; color:var(--ink-faint);">${zona} · ${a.publicado_en}</span>
+        <strong>${escaparHtml(a.titulo)}</strong>
+        <p style="margin: 4px 0; color: var(--ink-soft); font-size: 14px;">${escaparHtml(a.mensaje)}</p>
+        <span class="mono" style="font-size:11px; color:var(--ink-faint);">${escaparHtml(zona)} · ${escaparHtml(formatearFecha(a.publicado_en))}</span>
       </div>
     `;
   }).join('');
@@ -68,9 +62,9 @@ function pintarMapa(contenedores) {
     })
       .addTo(mapaGlobal)
       .bindPopup(`
-        <strong>${c.ubicacion}</strong><br>
-        ${c.tipo_residuo}<br>
-        Estado: <b>${c.estado}</b><br>
+        <strong>${escaparHtml(c.ubicacion)}</strong><br>
+        ${escaparHtml(c.tipo_residuo)}<br>
+        Estado: <b>${escaparHtml(c.estado)}</b> · Nivel ${Number(c.nivel_llenado)} %<br>
         <button onclick="seleccionarContenedorParaReportar(${c.id_contenedor})" style="margin-top:8px; padding: 6px 12px; background: var(--petrol, #1b4b43); color: white; border: none; border-radius: 3px; cursor: pointer;">Reportar este contenedor</button>
       `);
   });
@@ -89,7 +83,7 @@ window.seleccionarContenedorParaReportar = seleccionarContenedorParaReportar;
 
 function pintarSelectContenedores(contenedores) {
   document.getElementById('id_contenedor').innerHTML = contenedores
-    .map(c => `<option value="${c.id_contenedor}">${c.ubicacion}</option>`)
+    .map(c => `<option value="${c.id_contenedor}">${escaparHtml(c.ubicacion)}</option>`)
     .join('');
 }
 
@@ -101,15 +95,15 @@ function pintarReportes(reportes) {
   }
   contenedor.innerHTML = reportes.map(function (r) {
     return `
-      <div class="tarjeta-item">
+      <a class="tarjeta-item" href="incidencias.html?id=${r.id_incidencia}" style="text-decoration:none; color:inherit;">
         <div>
-          <strong>${r.contenedor_ubicacion}</strong>
+          <strong>${escaparHtml(r.contenedor_ubicacion)}</strong>
           <div class="mono" style="font-size:12px; color:var(--ink-soft); margin-top:2px;">
-            ${r.tipo} · ${new Date(r.fecha_apertura).toLocaleDateString('es-UY')}
+            #${r.id_incidencia} · ${escaparHtml(etiqueta('tipo', r.tipo))} · ${escaparHtml(formatearFecha(r.fecha_apertura, false))} · ver seguimiento →
           </div>
         </div>
-        <span class="etiqueta-estado estado-${r.estado}">${r.estado}</span>
-      </div>
+        ${insigniaEstado(r.estado)}
+      </a>
     `;
   }).join('');
 }
@@ -146,7 +140,8 @@ document.getElementById('form-reporte').addEventListener('submit', async functio
 
   const datos = {
     id_contenedor: document.getElementById('id_contenedor').value,
-    tipo: document.getElementById('tipo').value
+    tipo: document.getElementById('tipo').value,
+    descripcion: document.getElementById('descripcion').value.trim()
   };
 
   const divMensaje = document.getElementById('mensaje-reporte');
@@ -160,10 +155,11 @@ document.getElementById('form-reporte').addEventListener('submit', async functio
   const resultado = await respuesta.json();
 
   if (respuesta.ok && resultado.exito) {
-    divMensaje.innerHTML = `<div class="mensaje exito">${resultado.mensaje}</div>`;
+    divMensaje.innerHTML = `<div class="mensaje exito">${escaparHtml(resultado.mensaje)}</div>`;
+    document.getElementById('descripcion').value = '';
     cargarPanel();
   } else {
-    divMensaje.innerHTML = `<div class="mensaje error">${resultado.mensaje}</div>`;
+    divMensaje.innerHTML = `<div class="mensaje error">${escaparHtml(resultado.mensaje)}</div>`;
   }
 });
 
