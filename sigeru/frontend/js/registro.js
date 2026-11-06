@@ -10,7 +10,17 @@ selectTipo.addEventListener('change', function () {
   inputCodigo.required = esRolInterno;
 
   campoCentro.style.display = this.value === 'operario' ? 'block' : 'none';
+  document.getElementById('campo-zona').style.display = this.value === 'vecino' ? '' : 'none';
 });
+
+// Zonas para que el vecino elija su barrio al registrarse
+fetch(`${API_URL}/zonas.php`)
+  .then(r => r.ok ? r.json() : [])
+  .then(function (zonas) {
+    document.getElementById('id_zona').innerHTML = '<option value="">Elegir después</option>' +
+      zonas.map(z => `<option value="${z.id_zona}">${escaparHtml(z.nombre_zona)}</option>`).join('');
+  })
+  .catch(function () {});
 
 document.getElementById('form-registro').addEventListener('submit', async function (evento) {
   evento.preventDefault();
@@ -29,6 +39,10 @@ document.getElementById('form-registro').addEventListener('submit', async functi
     datos.codigo_funcionario = inputCodigo.value;
   }
 
+  if (selectTipo.value === 'vecino' && document.getElementById('id_zona').value) {
+    datos.id_zona = document.getElementById('id_zona').value;
+  }
+
   if (selectTipo.value === 'operario') {
     datos.id_centro = document.getElementById('id_centro').value;
   }
@@ -45,12 +59,12 @@ document.getElementById('form-registro').addEventListener('submit', async functi
     const resultado = await respuesta.json();
 
     if (respuesta.ok && resultado.exito) {
-      divMensaje.innerHTML = `<div class="mensaje exito">${resultado.mensaje}</div>`;
+      divMensaje.innerHTML = `<div class="mensaje exito">${escaparHtml(resultado.mensaje)}</div>`;
       document.getElementById('form-registro').reset();
       campoCodigo.style.display = 'none';
       campoCentro.style.display = 'none';
     } else {
-      divMensaje.innerHTML = `<div class="mensaje error">${resultado.mensaje}</div>`;
+      divMensaje.innerHTML = `<div class="mensaje error">${escaparHtml(resultado.mensaje)}</div>`;
     }
   } catch (error) {
     divMensaje.innerHTML = `<div class="mensaje error">Error de conexión con el servidor</div>`;

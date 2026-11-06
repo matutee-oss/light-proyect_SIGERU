@@ -54,7 +54,7 @@ document.getElementById('form-perfil').addEventListener('submit', async function
   const resultado = await respuesta.json();
 
   if (respuesta.ok && resultado.exito) {
-    divMensaje.innerHTML = `<div class="mensaje exito">${resultado.mensaje}</div>`;
+    divMensaje.innerHTML = `<div class="mensaje exito">${escaparHtml(resultado.mensaje)}</div>`;
     cargarPerfil();
   } else {
     divMensaje.innerHTML = `<div class="mensaje error">${resultado.mensaje || 'No se pudo actualizar'}</div>`;
@@ -83,7 +83,7 @@ document.getElementById('input-foto').addEventListener('change', async function 
       document.getElementById('foto-perfil').src = `${API_URL}/${resultado.foto}?t=${Date.now()}`;
       divMensaje.innerHTML = '<div class="mensaje exito">Foto actualizada</div>';
     } else {
-      divMensaje.innerHTML = `<div class="mensaje error">${resultado.mensaje}</div>`;
+      divMensaje.innerHTML = `<div class="mensaje error">${escaparHtml(resultado.mensaje)}</div>`;
     }
   } catch (error) {
     divMensaje.innerHTML = '<div class="mensaje error">Error de conexión con el servidor</div>';

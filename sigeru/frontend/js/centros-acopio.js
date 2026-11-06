@@ -28,9 +28,10 @@ function renderizarCentros(centros) {
     const recursos = c.recursos || [];
     const tablaRecursos = recursos.length
       ? `<table class="listado" style="margin-top:12px;">
-          <thead><tr><th>Recurso / Maquinaria</th><th>Cantidad</th></tr></thead>
+          <thead><tr><th>Recurso / Maquinaria</th><th>Cantidad</th><th></th></tr></thead>
           <tbody>
-            ${recursos.map(r => `<tr><td>${r.tipo}</td><td class="mono">${r.cantidad}</td></tr>`).join('')}
+            ${recursos.map(r => `<tr><td>${escaparHtml(r.tipo)}</td><td class="mono">${Number(r.cantidad)}</td>
+              <td style="text-align:right;"><button type="button" class="btn-eliminar-recurso" data-centro="${c.id_centro}" data-recurso="${r.id_recurso}">Quitar</button></td></tr>`).join('')}
           </tbody>
         </table>`
       : '<p class="mono" style="color:var(--ink-faint); font-size:12px; margin-top:8px;">Sin recursos registrados.</p>';
@@ -40,9 +41,10 @@ function renderizarCentros(centros) {
         <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px;">
           <div>
             <div class="eyebrow">Centro #${c.id_centro}</div>
-            <h3 style="font-size:20px; margin:4px 0;">${c.nombre}</h3>
-            <p style="color:var(--ink-soft); margin:0; font-size:14px;">${c.ubicacion}</p>
-            <p style="color:var(--ink-soft); margin:4px 0 0; font-size:13px;" class="mono">Capacidad: ${Number(c.capacidad).toLocaleString()} t</p>
+            <h3 style="font-size:20px; margin:4px 0;">${escaparHtml(c.nombre)}</h3>
+            <p style="color:var(--ink-soft); margin:0; font-size:14px;">${escaparHtml(c.ubicacion)}</p>
+            <p style="color:var(--ink-soft); margin:4px 0 0; font-size:13px;" class="mono">Capacidad: ${Number(c.capacidad).toLocaleString('es-UY')} m³ · ${Number(c.total_operarios || 0)} operario(s)${c.latitud ? '' : ' · sin ubicación en el mapa'}</p>
+            ${c.ocupacion ? `<div class="medidor-nivel" style="margin-top:8px; max-width:320px;"><div class="nivel-barra"><div style="width:${Math.min(100, c.ocupacion.porcentaje)}%; background:${c.ocupacion.porcentaje >= 80 ? 'var(--clay)' : 'var(--petrol)'};"></div></div><span>${c.ocupacion.porcentaje} % ocupado (30 días)</span></div>` : ''}
           </div>
           <div style="display:flex; gap:8px; flex-wrap:wrap;">
             <button data-id="${c.id_centro}" class="btn-editar-centro" style="padding:6px 16px; font-size:13px; background:var(--petrol); color:#fff; border:none; border-radius:var(--radio); cursor:pointer;">Editar</button>
@@ -64,6 +66,14 @@ function renderizarCentros(centros) {
   document.querySelectorAll('.btn-agregar-recurso').forEach(b => {
     b.addEventListener('click', () => abrirModalRecurso(parseInt(b.dataset.id)));
   });
+  document.querySelectorAll('.btn-eliminar-recurso').forEach(b => {
+    b.addEventListener('click', async function () {
+      if (!confirm('¿Quitar este recurso del centro?')) return;
+      const { ok, datos } = await pedirJson(`${API_URL}/centros_acopio.php?id=${b.dataset.centro}&accion=eliminar_recurso&id_recurso=${b.dataset.recurso}`, { method: 'DELETE' });
+      if (!ok) alert(datos.mensaje);
+      cargarCentros();
+    });
+  });
   document.querySelectorAll('.btn-eliminar-centro').forEach(b => {
     b.addEventListener('click', () => eliminarCentro(parseInt(b.dataset.id)));
   });
@@ -81,6 +91,8 @@ function activarEdicion(id) {
   document.getElementById('c-nombre').value = centro.nombre;
   document.getElementById('c-ubicacion').value = centro.ubicacion;
   document.getElementById('c-capacidad').value = centro.capacidad;
+  document.getElementById('c-latitud').value = centro.latitud || '';
+  document.getElementById('c-longitud').value = centro.longitud || '';
 
   document.querySelector('section.tarjeta').scrollIntoView({ behavior: 'smooth' });
 }
@@ -104,6 +116,8 @@ document.getElementById('form-centro').addEventListener('submit', async function
     nombre:    document.getElementById('c-nombre').value,
     ubicacion: document.getElementById('c-ubicacion').value,
     capacidad: parseFloat(document.getElementById('c-capacidad').value),
+    latitud:   document.getElementById('c-latitud').value || null,
+    longitud:  document.getElementById('c-longitud').value || null,
   };
 
   const url = id ? `${API_URL}/centros_acopio.php?id=${id}` : `${API_URL}/centros_acopio.php`;
@@ -120,11 +134,11 @@ document.getElementById('form-centro').addEventListener('submit', async function
     const resultado = await respuesta.json();
 
     if (respuesta.ok && resultado.exito) {
-      divMensaje.innerHTML = `<div class="mensaje exito">${resultado.mensaje}</div>`;
       cancelarEdicion();
+      divMensaje.innerHTML = `<div class="mensaje exito">${escaparHtml(resultado.mensaje)}</div>`;
       cargarCentros();
     } else {
-      divMensaje.innerHTML = `<div class="mensaje error">${resultado.mensaje}</div>`;
+      divMensaje.innerHTML = `<div class="mensaje error">${escaparHtml(resultado.mensaje)}</div>`;
     }
   } catch (error) {
     divMensaje.innerHTML = `<div class="mensaje error">Error de conexión con el servidor</div>`;
@@ -192,13 +206,13 @@ document.getElementById('form-recurso').addEventListener('submit', async functio
     const resultado = await respuesta.json();
 
     if (respuesta.ok && resultado.exito) {
-      divMensaje.innerHTML = `<div class="mensaje exito">${resultado.mensaje}</div>`;
+      divMensaje.innerHTML = `<div class="mensaje exito">${escaparHtml(resultado.mensaje)}</div>`;
       setTimeout(() => {
         document.getElementById('modal-recurso').style.display = 'none';
         cargarCentros();
       }, 800);
     } else {
-      divMensaje.innerHTML = `<div class="mensaje error">${resultado.mensaje}</div>`;
+      divMensaje.innerHTML = `<div class="mensaje error">${escaparHtml(resultado.mensaje)}</div>`;
     }
   } catch (error) {
     divMensaje.innerHTML = `<div class="mensaje error">Error de conexión</div>`;

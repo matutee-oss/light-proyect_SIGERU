@@ -10,13 +10,7 @@
 
   <nav class="barra-navegacion">
     <span class="logo">SiGeRU <span>MONTEVIDEO</span></span>
-    <div class="enlaces">
-      <a href="panel-admin.html">Panel</a>
-      <a href="usuarios.html">Usuarios</a>
-      <a href="contenedores.html">Contenedores</a>
-      <a href="camiones.html">Camiones</a>
-      <a href="centros-acopio.html">Centros de Acopio</a>
-    </div>
+    <div class="enlaces"></div>
   </nav>
 
   <main>
@@ -40,8 +34,18 @@
         </div>
 
         <div class="campo">
-          <label for="c-capacidad">Capacidad (toneladas)</label>
+          <label for="c-capacidad">Capacidad (m³)</label>
           <input type="number" id="c-capacidad" required min="0.1" step="0.1" placeholder="500">
+        </div>
+
+        <div class="campo">
+          <label for="c-latitud">Latitud (para el mapa)</label>
+          <input type="number" id="c-latitud" step="0.0000001" placeholder="-34.9050">
+        </div>
+
+        <div class="campo">
+          <label for="c-longitud">Longitud (para el mapa)</label>
+          <input type="number" id="c-longitud" step="0.0000001" placeholder="-56.1290">
         </div>
 
         <div style="display:flex; gap:12px; flex-wrap:wrap;">

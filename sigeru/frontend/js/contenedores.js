@@ -3,16 +3,34 @@ const sesion = exigirSesion(['administrador']);
 let todosLosContenedores = [];
 let modoEdicionContenedor = false;
 
+async function cargarZonas() {
+  try {
+    const respuesta = await fetch(`${API_URL}/zonas.php`);
+    const zonas = await respuesta.json();
+    const opciones = zonas.map(z => `<option value="${z.id_zona}">${escaparHtml(z.nombre_zona)}</option>`).join('');
+    document.getElementById('id_zona').innerHTML = '<option value="">Sin zona</option>' + opciones;
+    document.getElementById('filtro-zona').innerHTML = '<option value="">Todas</option>' + opciones;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 async function cargarContenedores() {
   const tabla = document.getElementById('tabla-contenedores');
-  tabla.innerHTML = '<tr><td colspan="6">Cargando...</td></tr>';
+  tabla.innerHTML = '<tr><td colspan="7">Cargando...</td></tr>';
+
+  const filtros = new URLSearchParams();
+  const zona = document.getElementById('filtro-zona').value;
+  const estado = document.getElementById('filtro-estado').value;
+  if (zona) filtros.set('id_zona', zona);
+  if (estado) filtros.set('estado', estado);
 
   try {
-    const respuesta = await fetchAutenticado(`${API_URL}/contenedores.php`);
+    const respuesta = await fetchAutenticado(`${API_URL}/contenedores.php?${filtros}`);
     todosLosContenedores = await respuesta.json();
     renderizarContenedores(todosLosContenedores);
   } catch (error) {
-    tabla.innerHTML = '<tr><td colspan="6">Error al cargar contenedores</td></tr>';
+    tabla.innerHTML = '<tr><td colspan="7">Error al cargar contenedores</td></tr>';
     console.error(error);
   }
 }
@@ -20,7 +38,7 @@ async function cargarContenedores() {
 function renderizarContenedores(contenedores) {
   const tabla = document.getElementById('tabla-contenedores');
   if (!contenedores.length) {
-    tabla.innerHTML = '<tr><td colspan="6" style="color:var(--ink-faint);">Sin contenedores registrados.</td></tr>';
+    tabla.innerHTML = '<tr><td colspan="7" style="color:var(--ink-faint);">Sin contenedores registrados.</td></tr>';
     return;
   }
 
@@ -29,10 +47,11 @@ function renderizarContenedores(contenedores) {
     const fila = document.createElement('tr');
     fila.innerHTML = `
       <td class="mono" style="font-size:12px;">${contenedor.id_contenedor}</td>
-      <td>${contenedor.ubicacion}</td>
-      <td>${contenedor.tipo_residuo}</td>
-      <td><span class="etiqueta-estado estado-${contenedor.estado}">${contenedor.estado}</span></td>
-      <td class="mono" style="font-size:12px;">${contenedor.id_zona || '—'}</td>
+      <td>${escaparHtml(contenedor.ubicacion)}</td>
+      <td>${escaparHtml(contenedor.tipo_residuo)}</td>
+      <td>${insigniaEstado(contenedor.estado, 'contenedor')}</td>
+      <td style="font-size:13px;">${escaparHtml(contenedor.nombre_zona || '—')}</td>
+      <td class="mono" style="font-size:12px;">${Number(contenedor.nivel_llenado)} %</td>
       <td>
         <div style="display:flex; gap:6px; flex-wrap:wrap;">
           <button data-id="${contenedor.id_contenedor}" class="btn-editar-contenedor" style="padding:4px 12px; font-size:12px; background:var(--petrol); color:#fff; border:none; border-radius:var(--radio); cursor:pointer;">Editar</button>
@@ -67,6 +86,8 @@ function activarEdicionContenedor(id) {
   document.getElementById('id_zona').value = contenedor.id_zona || '';
   document.getElementById('latitud').value = contenedor.latitud || '';
   document.getElementById('longitud').value = contenedor.longitud || '';
+  document.getElementById('capacidad_litros').value = contenedor.capacidad_litros || 2400;
+  document.getElementById('nivel_llenado').value = contenedor.nivel_llenado || 0;
 
   document.querySelector('section.tarjeta').scrollIntoView({ behavior: 'smooth' });
 }
@@ -78,7 +99,6 @@ function cancelarEdicionContenedor() {
   document.getElementById('btn-cancelar-contenedor').style.display = 'none';
   document.getElementById('contenedor-id').value = '';
   document.getElementById('form-contenedor').reset();
-  document.getElementById('mensaje-contenedor').innerHTML = '';
 }
 
 document.getElementById('btn-cancelar-contenedor').addEventListener('click', cancelarEdicionContenedor);
@@ -90,7 +110,11 @@ async function eliminarContenedor(id) {
     const respuesta = await fetchAutenticado(`${API_URL}/contenedores.php?id=${id}`, { method: 'DELETE' });
     const resultado = await respuesta.json();
     if (respuesta.ok && resultado.exito) {
-      cargarContenedores();
+      document.getElementById('filtro-zona').addEventListener('change', cargarContenedores);
+document.getElementById('filtro-estado').addEventListener('change', cargarContenedores);
+
+cargarZonas();
+cargarContenedores();
     } else {
       alert(resultado.mensaje);
     }
@@ -115,6 +139,8 @@ document.getElementById('form-contenedor').addEventListener('submit', async func
     id_zona:      idZona ? parseInt(idZona, 10) : null,
     latitud:      lat ? parseFloat(lat) : null,
     longitud:     lng ? parseFloat(lng) : null,
+    capacidad_litros: document.getElementById('capacidad_litros').value,
+    nivel_llenado:    document.getElementById('nivel_llenado').value,
   };
 
   const divMensaje = document.getElementById('mensaje-contenedor');
@@ -131,11 +157,15 @@ document.getElementById('form-contenedor').addEventListener('submit', async func
     const resultado = await respuesta.json();
 
     if (respuesta.ok && resultado.exito) {
-      divMensaje.innerHTML = `<div class="mensaje exito">${resultado.mensaje}</div>`;
+      divMensaje.innerHTML = `<div class="mensaje exito">${escaparHtml(resultado.mensaje)}</div>`;
       cancelarEdicionContenedor();
-      cargarContenedores();
+      document.getElementById('filtro-zona').addEventListener('change', cargarContenedores);
+document.getElementById('filtro-estado').addEventListener('change', cargarContenedores);
+
+cargarZonas();
+cargarContenedores();
     } else {
-      divMensaje.innerHTML = `<div class="mensaje error">${resultado.mensaje}</div>`;
+      divMensaje.innerHTML = `<div class="mensaje error">${escaparHtml(resultado.mensaje)}</div>`;
     }
   } catch (error) {
     divMensaje.innerHTML = `<div class="mensaje error">Error de conexión con el servidor</div>`;
@@ -143,4 +173,8 @@ document.getElementById('form-contenedor').addEventListener('submit', async func
   }
 });
 
+document.getElementById('filtro-zona').addEventListener('change', cargarContenedores);
+document.getElementById('filtro-estado').addEventListener('change', cargarContenedores);
+
+cargarZonas();
 cargarContenedores();

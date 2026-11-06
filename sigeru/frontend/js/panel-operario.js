@@ -65,8 +65,8 @@ function pintarIngresos(ingresos) {
       <tr>
         <td class="mono" style="font-size:12px;">${fecha}</td>
         <td><strong>${parseFloat(i.toneladas).toFixed(2)} t</strong></td>
-        <td>${i.matricula ? `<span class="mono">${i.matricula}</span>` : '—'}</td>
-        <td style="color: var(--ink-soft);">${i.observaciones || '—'}</td>
+        <td>${i.matricula ? `<span class="mono">${escaparHtml(i.matricula)}</span>` : '—'}</td>
+        <td style="color: var(--ink-soft);">${escaparHtml(i.observaciones || '—')}</td>
       </tr>
     `;
   }).join('');
@@ -77,7 +77,7 @@ function pintarRecursos(recursos) {
   tabla.innerHTML = recursos.map(function (r) {
     return `
       <tr>
-        <td>${r.tipo}</td>
+        <td>${escaparHtml(r.tipo)}</td>
         <td><input type="number" min="0" value="${r.cantidad}" data-id="${r.id_recurso}" class="input-recurso"></td>
         <td><button data-id="${r.id_recurso}" class="btn-guardar-recurso boton-primario" style="padding: 6px 14px; font-size:12px;">Guardar</button></td>
       </tr>
@@ -113,7 +113,7 @@ async function cargarPanel() {
 
   if (!respuesta.ok) {
     document.getElementById('contenido-operario').innerHTML =
-      `<div class="mensaje error">${datos.mensaje}</div>`;
+      `<div class="mensaje error">${escaparHtml(datos.mensaje)}</div>`;
     return;
   }
 
@@ -147,11 +147,11 @@ document.getElementById('form-ingreso').addEventListener('submit', async functio
   const divMensaje = document.getElementById('mensaje-ingreso');
 
   if (respuesta.ok && resultado.exito) {
-    divMensaje.innerHTML = `<div class="mensaje exito">${resultado.mensaje}</div>`;
+    divMensaje.innerHTML = `<div class="mensaje exito">${escaparHtml(resultado.mensaje)}</div>`;
     document.getElementById('form-ingreso').reset();
     cargarPanel();
   } else {
-    divMensaje.innerHTML = `<div class="mensaje error">${resultado.mensaje}</div>`;
+    divMensaje.innerHTML = `<div class="mensaje error">${escaparHtml(resultado.mensaje)}</div>`;
   }
 });
 

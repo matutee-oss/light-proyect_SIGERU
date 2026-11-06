@@ -28,8 +28,8 @@ function renderizarCamiones(camiones) {
     const fila = document.createElement('tr');
     fila.innerHTML = `
       <td class="mono" style="font-size:12px;">${camion.id_camion}</td>
-      <td><strong>${camion.matricula}</strong></td>
-      <td><span class="etiqueta-estado estado-${camion.estado}">${camion.estado}</span></td>
+      <td><strong>${escaparHtml(camion.matricula)}</strong></td>
+      <td><span class="etiqueta-estado estado-${escaparHtml(camion.estado)}">${escaparHtml(camion.estado)}</span></td>
       <td class="mono" style="font-size:12px;">${camion.capacidad_kg ? Number(camion.capacidad_kg).toLocaleString() : '6,000'} kg</td>
       <td>
         <div style="display:flex; gap:6px; flex-wrap:wrap;">
@@ -125,11 +125,11 @@ document.getElementById('form-camion').addEventListener('submit', async function
     const resultado = await respuesta.json();
 
     if (respuesta.ok && resultado.exito) {
-      divMensaje.innerHTML = `<div class="mensaje exito">${resultado.mensaje}</div>`;
+      divMensaje.innerHTML = `<div class="mensaje exito">${escaparHtml(resultado.mensaje)}</div>`;
       cancelarEdicion();
       cargarCamiones();
     } else {
-      divMensaje.innerHTML = `<div class="mensaje error">${resultado.mensaje}</div>`;
+      divMensaje.innerHTML = `<div class="mensaje error">${escaparHtml(resultado.mensaje)}</div>`;
     }
   } catch (error) {
     divMensaje.innerHTML = `<div class="mensaje error">Error de conexión con el servidor</div>`;

@@ -39,11 +39,11 @@ function renderizarTabla(usuarios) {
     return `
       <tr>
         <td class="mono" style="font-size:12px;">${u.id_usuario}</td>
-        <td><strong>${u.nombre} ${u.apellido}</strong></td>
-        <td>${u.email}</td>
-        <td class="mono" style="font-size:12px;">${u.ci}</td>
-        <td><span class="mono" style="font-size:11px; background:var(--surface-raised); padding:2px 8px; border-radius:4px;">${u.tipo_usuario}</span></td>
-        <td><span class="etiqueta-estado estado-${u.estado}">${u.estado}</span></td>
+        <td><strong>${escaparHtml(u.nombre)} ${escaparHtml(u.apellido)}</strong></td>
+        <td>${escaparHtml(u.email)}</td>
+        <td class="mono" style="font-size:12px;">${escaparHtml(u.ci)}</td>
+        <td><span class="mono" style="font-size:11px; background:var(--surface-raised); padding:2px 8px; border-radius:4px;">${escaparHtml(u.tipo_usuario)}</span></td>
+        <td><span class="etiqueta-estado estado-${escaparHtml(u.estado)}">${escaparHtml(u.estado)}</span></td>
         <td>
           <div style="display:flex; gap:6px; flex-wrap:wrap;">
             <button data-id="${u.id_usuario}" class="btn-editar-usuario" style="padding:4px 12px; font-size:12px; background:var(--petrol); color:#fff; border:none; border-radius:var(--radio); cursor:pointer;">Editar</button>
@@ -85,6 +85,7 @@ function activarEdicion(id) {
 
   document.getElementById('campo-centro-usuario').style.display =
     usuario.tipo_usuario === 'operario' ? 'block' : 'none';
+  document.getElementById('u-id-centro').value = usuario.id_centro || '';
 
   document.querySelector('section.tarjeta').scrollIntoView({ behavior: 'smooth' });
 }
@@ -141,11 +142,11 @@ document.getElementById('form-usuario').addEventListener('submit', async functio
     const resultado = await respuesta.json();
 
     if (respuesta.ok && resultado.exito) {
-      divMensaje.innerHTML = `<div class="mensaje exito">${resultado.mensaje}</div>`;
+      divMensaje.innerHTML = `<div class="mensaje exito">${escaparHtml(resultado.mensaje)}</div>`;
       cancelarEdicion();
       cargarUsuarios();
     } else {
-      divMensaje.innerHTML = `<div class="mensaje error">${resultado.mensaje}</div>`;
+      divMensaje.innerHTML = `<div class="mensaje error">${escaparHtml(resultado.mensaje)}</div>`;
     }
   } catch (error) {
     divMensaje.innerHTML = `<div class="mensaje error">Error de conexión con el servidor</div>`;

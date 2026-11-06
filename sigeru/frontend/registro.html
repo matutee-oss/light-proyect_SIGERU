@@ -35,7 +35,7 @@
 
         <div class="campo">
           <label for="ci">Cédula de identidad</label>
-          <input type="text" id="ci" name="ci" required>
+          <input type="text" id="ci" name="ci" required inputmode="numeric" placeholder="1.234.567-2">
         </div>
 
         <div class="campo">
@@ -50,7 +50,7 @@
 
         <div class="campo">
           <label for="password">Contraseña</label>
-          <input type="password" id="password" name="password" required minlength="6">
+          <input type="password" id="password" name="password" required minlength="8">
         </div>
 
         <div class="campo">
@@ -61,6 +61,11 @@
             <option value="cuadrilla">Cuadrilla</option>
             <option value="administrador">Administrador</option>
           </select>
+        </div>
+
+        <div id="campo-zona" class="campo">
+          <label for="id_zona">Zona donde vivís</label>
+          <select id="id_zona" name="id_zona"><option value="">Elegir después</option></select>
         </div>
 
         <div id="campo-codigo" class="campo" style="display:none;">

@@ -26,10 +26,10 @@ document.getElementById('form-login').addEventListener('submit', async function 
         vecino: 'panel-vecino.html'
       };
 
-      divMensaje.innerHTML = `<div class="mensaje exito">Bienvenido, ${datos.usuario.nombre}</div>`;
+      divMensaje.innerHTML = `<div class="mensaje exito">Bienvenido, ${escaparHtml(datos.usuario.nombre)}</div>`;
       setTimeout(() => window.location.href = rutasPorTipo[datos.usuario.tipo] || 'index.html', 700);
     } else {
-      divMensaje.innerHTML = `<div class="mensaje error">${datos.mensaje}</div>`;
+      divMensaje.innerHTML = `<div class="mensaje error">${escaparHtml(datos.mensaje)}</div>`;
     }
   } catch (error) {
     divMensaje.innerHTML = `<div class="mensaje error">Error de conexión con el servidor</div>`;
