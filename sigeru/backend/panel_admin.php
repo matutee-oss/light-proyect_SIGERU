@@ -35,6 +35,9 @@ switch ($_SERVER['REQUEST_METHOD']) {
                     !empty($datos['id_zona']) ? (int) $datos['id_zona'] : null
                 );
                 break;
+            case 'retirar_aviso':
+                $resultado = $controlador->desactivarAviso((int) ($datos['id_aviso'] ?? 0));
+                break;
             default:
                 responderJson(400, ['mensaje' => 'Acción no reconocida']);
         }

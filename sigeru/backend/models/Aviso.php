@@ -37,4 +37,11 @@ class Aviso
         $consulta->execute(['titulo' => $titulo, 'mensaje' => $mensaje, 'id_zona' => $idZona]);
         return (int) $this->conexion->lastInsertId();
     }
+
+    public function desactivar(int $idAviso): bool
+    {
+        $consulta = $this->conexion->prepare('UPDATE avisos SET activo = 0 WHERE id_aviso = :id AND activo = 1');
+        $consulta->execute(['id' => $idAviso]);
+        return $consulta->rowCount() > 0;
+    }
 }

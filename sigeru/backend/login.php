@@ -15,8 +15,7 @@ if (empty($datos['email']) || empty($datos['password'])) {
     responderJson(400, ['mensaje' => 'Debe enviar email y password']);
 }
 
-$conexion = obtenerConexion();
-$controlador = new AuthController($conexion);
-$resultado = $controlador->login($datos['email'], $datos['password']);
+$controlador = new AuthController(obtenerConexion());
+$resultado = $controlador->login((string) $datos['email'], (string) $datos['password']);
 
 responderJson($resultado['exito'] ? 200 : 401, $resultado);

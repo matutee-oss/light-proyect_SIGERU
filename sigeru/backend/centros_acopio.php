@@ -12,7 +12,7 @@ requerirRol($usuarioAutenticado, ['administrador', 'operario']);
 
 $controlador = new CentroAcopioController($conexion);
 $metodo = $_SERVER['REQUEST_METHOD'];
-$id = isset($_GET['id']) ? (int) $_GET['id'] : null;
+$id = parametroEntero('id');
 $accion = $_GET['accion'] ?? '';
 
 switch ($metodo) {
@@ -32,13 +32,13 @@ switch ($metodo) {
         if ($accion === 'agregar_recurso' && $id) {
             $datos = leerCuerpoJson();
             $resultado = $controlador->agregarRecurso($id, $datos);
-            responderJson($resultado['exito'] ? 201 : 400, $resultado);
+            responderResultado($resultado, 201);
             break;
         }
 
         $datos = leerCuerpoJson();
         $resultado = $controlador->crear($datos);
-        responderJson($resultado['exito'] ? 201 : 400, $resultado);
+        responderResultado($resultado, 201);
         break;
 
     case 'PUT':
@@ -49,27 +49,34 @@ switch ($metodo) {
 
         if ($accion === 'actualizar_recurso') {
             $datos = leerCuerpoJson();
-            $idRecurso = isset($_GET['id_recurso']) ? (int) $_GET['id_recurso'] : null;
+            $idRecurso = parametroEntero('id_recurso');
             if (!$idRecurso) {
                 responderJson(400, ['mensaje' => 'Debe indicar ?id_recurso=']);
             }
             $resultado = $controlador->actualizarRecurso($id, $idRecurso, $datos);
-            responderJson($resultado['exito'] ? 200 : 404, $resultado);
+            responderResultado($resultado);
             break;
         }
 
         $datos = leerCuerpoJson();
         $resultado = $controlador->actualizar($id, $datos);
-        responderJson($resultado['exito'] ? 200 : 404, $resultado);
+        responderResultado($resultado);
         break;
 
     case 'DELETE':
         requerirRol($usuarioAutenticado, ['administrador']);
+        if ($accion === 'eliminar_recurso' && $id) {
+            $idRecurso = parametroEntero('id_recurso');
+            if (!$idRecurso) {
+                responderJson(400, ['mensaje' => 'Debe indicar ?id_recurso=']);
+            }
+            responderResultado($controlador->eliminarRecurso($id, $idRecurso));
+        }
         if (!$id) {
             responderJson(400, ['mensaje' => 'Debe indicar ?id= del centro a eliminar']);
         }
         $resultado = $controlador->eliminar($id);
-        responderJson($resultado['exito'] ? 200 : 404, $resultado);
+        responderResultado($resultado);
         break;
 
     default:

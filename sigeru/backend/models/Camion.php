@@ -34,6 +34,14 @@ class Camion
         return $resultado ?: null;
     }
 
+    public function buscarPorMatricula(string $matricula): ?array
+    {
+        $consulta = $this->conexion->prepare('SELECT * FROM camiones WHERE REPLACE(matricula, " ", "") = REPLACE(:matricula, " ", "")');
+        $consulta->execute(['matricula' => strtoupper(trim($matricula))]);
+        $resultado = $consulta->fetch();
+        return $resultado ?: null;
+    }
+
     public function crear(array $datos): int
     {
         $consulta = $this->conexion->prepare(
@@ -41,11 +49,11 @@ class Camion
              VALUES (:matricula, :estado, :capacidad_kg, :latitud, :longitud)'
         );
         $consulta->execute([
-            'matricula'    => $datos['matricula'],
+            'matricula'    => strtoupper(trim($datos['matricula'])),
             'estado'       => $datos['estado'] ?? 'disponible',
-            'capacidad_kg' => $datos['capacidad_kg'] ?? 6000,
-            'latitud'      => $datos['latitud'] ?? null,
-            'longitud'     => $datos['longitud'] ?? null,
+            'capacidad_kg' => ($datos['capacidad_kg'] ?? '') !== '' ? (float) $datos['capacidad_kg'] : 6000,
+            'latitud'      => ($datos['latitud'] ?? '') !== '' ? (float) $datos['latitud'] : null,
+            'longitud'     => ($datos['longitud'] ?? '') !== '' ? (float) $datos['longitud'] : null,
         ]);
         return (int) $this->conexion->lastInsertId();
     }
@@ -62,11 +70,11 @@ class Camion
              WHERE id_camion = :id'
         );
         return $consulta->execute([
-            'matricula'    => $datos['matricula'],
-            'estado'       => $datos['estado'],
-            'capacidad_kg' => $datos['capacidad_kg'] ?? 6000,
-            'latitud'      => $datos['latitud'] ?? null,
-            'longitud'     => $datos['longitud'] ?? null,
+            'matricula'    => strtoupper(trim($datos['matricula'])),
+            'estado'       => $datos['estado'] ?? 'disponible',
+            'capacidad_kg' => ($datos['capacidad_kg'] ?? '') !== '' ? (float) $datos['capacidad_kg'] : 6000,
+            'latitud'      => ($datos['latitud'] ?? '') !== '' ? (float) $datos['latitud'] : null,
+            'longitud'     => ($datos['longitud'] ?? '') !== '' ? (float) $datos['longitud'] : null,
             'id'           => $id,
         ]);
     }

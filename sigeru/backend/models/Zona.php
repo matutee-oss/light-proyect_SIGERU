@@ -11,7 +11,7 @@ class Zona
 
     public function listarTodas(): array
     {
-        $consulta = $this->conexion->query('SELECT * FROM zonas ORDER BY nombre_zona');
+        $consulta = $this->conexion->query('SELECT * FROM zonas ORDER BY id_zona');
         return $consulta->fetchAll();
     }
 

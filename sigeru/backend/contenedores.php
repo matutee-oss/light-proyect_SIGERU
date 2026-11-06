@@ -12,7 +12,7 @@ requerirRol($usuarioAutenticado, ['administrador']);
 
 $controlador = new ContenedorController($conexion);
 $metodo = $_SERVER['REQUEST_METHOD'];
-$id = isset($_GET['id']) ? (int) $_GET['id'] : null;
+$id = parametroEntero('id');
 
 switch ($metodo) {
     case 'GET':
@@ -22,13 +22,13 @@ switch ($metodo) {
                 ? responderJson(200, $contenedor)
                 : responderJson(404, ['mensaje' => 'Contenedor no encontrado']);
         }
-        responderJson(200, $controlador->listar());
+        responderJson(200, $controlador->listar(array_intersect_key($_GET, array_flip(['id_zona', 'estado', 'nivel_minimo']))));
         break;
 
     case 'POST':
         $datos = leerCuerpoJson();
         $resultado = $controlador->crear($datos);
-        responderJson($resultado['exito'] ? 201 : 400, $resultado);
+        responderResultado($resultado, 201);
         break;
 
     case 'PUT':
@@ -37,7 +37,7 @@ switch ($metodo) {
         }
         $datos = leerCuerpoJson();
         $resultado = $controlador->actualizar($id, $datos);
-        responderJson($resultado['exito'] ? 200 : 404, $resultado);
+        responderResultado($resultado);
         break;
 
     case 'DELETE':
@@ -45,7 +45,7 @@ switch ($metodo) {
             responderJson(400, ['mensaje' => 'Debe indicar ?id= del contenedor a eliminar']);
         }
         $resultado = $controlador->eliminar($id);
-        responderJson($resultado['exito'] ? 200 : 404, $resultado);
+        responderResultado($resultado);
         break;
 
     default:
