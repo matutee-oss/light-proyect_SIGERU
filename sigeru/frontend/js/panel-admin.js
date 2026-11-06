@@ -1,11 +1,5 @@
 const sesion = exigirSesion(['administrador']);
 
-function colorSegunEstado(estado) {
-  if (estado === 'desbordado') return '#ad4d38';
-  if (estado === 'roto') return '#c97f24';
-  return '#1b4b43';
-}
-
 function iconoEmojiCamion(estado) {
   return L.divIcon({
     className: 'icono-mapa',
@@ -41,17 +35,21 @@ function pintarMapa(datos) {
       radius: 9, color: color, fillColor: color, fillOpacity: 0.85, weight: 2
     })
       .addTo(mapaGlobal)
-      .bindPopup(`<strong>${c.ubicacion}</strong><br>${c.tipo_residuo}<br>Estado: <b>${c.estado}</b>`);
+      .bindPopup(`<strong>${escaparHtml(c.ubicacion)}</strong><br>${escaparHtml(c.tipo_residuo)}<br>Estado: <b>${escaparHtml(c.estado)}</b> · Nivel ${Number(c.nivel_llenado)} %<br><a href="mapa.html?contenedor=${c.id_contenedor}">Abrir en el mapa interactivo →</a>`);
   });
 
   (datos.camiones_mapa || []).forEach(function (cam) {
     L.marker([cam.latitud, cam.longitud], { icon: iconoEmojiCamion(cam.estado) })
       .addTo(mapaGlobal)
-      .bindPopup(`<strong>🚛 Camión ${cam.matricula}</strong><br>Estado: <b>${cam.estado}</b>`);
+      .bindPopup(`<strong>🚛 Camión ${escaparHtml(cam.matricula)}</strong><br>Estado: <b>${escaparHtml(cam.estado)}</b>`);
   });
 
+  // Corrección: los centros de acopio no se dibujaban (el bucle estaba vacío)
   (datos.centros || []).forEach(function (centro) {
-
+    if (centro.latitud === null || centro.longitud === null) return;
+    L.marker([centro.latitud, centro.longitud], { icon: iconoCentroAcopio() })
+      .addTo(mapaGlobal)
+      .bindPopup(`<strong>🏭 ${escaparHtml(centro.nombre)}</strong><br>${escaparHtml(centro.ubicacion)}`);
   });
 }
 
@@ -76,7 +74,7 @@ function pintarRankingZonas(ranking) {
         <span class="pos-ranking">${i + 1}</span>
         <div style="flex:1;">
           <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-            <span>${r.nombre_zona}</span>
+            <span>${escaparHtml(r.nombre_zona)}</span>
             <span class="mono" style="color:var(--ink-soft);">${r.total_abiertas}</span>
           </div>
           <div class="barra-mini"><div class="barra-mini-fill" style="width:${ancho}%"></div></div>
@@ -118,30 +116,23 @@ function pintarFeed(feed) {
     return;
   }
 
-  contenedor.innerHTML = feed.map(function (i) {
-    let texto = '';
-    let color = 'var(--petrol)';
-    if (i.estado === 'resuelta') {
-      texto = `<strong>Resuelta</strong> · ${i.contenedor_ubicacion}`;
-      color = 'var(--petrol)';
-      if (i.cuadrilla_nombre) texto += ` · por ${i.cuadrilla_nombre} ${i.cuadrilla_apellido}`;
-    } else if (i.id_cuadrilla) {
-      texto = `<strong>En curso</strong> · ${i.contenedor_ubicacion}`;
-      color = 'var(--amber)';
-    } else {
-      texto = `<strong>Reportada</strong> · ${i.contenedor_ubicacion}`;
-      color = 'var(--clay)';
-      if (i.vecino_nombre) texto += ` · por ${i.vecino_nombre} ${i.vecino_apellido}`;
-    }
-    const fecha = i.fecha_resolucion || i.fecha_apertura;
+  // El feed ahora sale del historial de seguimiento de incidencias
+  const colores = { creada: 'var(--clay)', asignada: 'var(--amber)', estado: 'var(--petrol)', comentario: 'var(--ink-faint)' };
+  contenedor.innerHTML = feed.map(function (f) {
+    const quien = f.nombre ? `${f.nombre} ${f.apellido}` : 'Sistema';
+    let accion = 'comentó';
+    if (f.accion === 'creada') accion = 'reportó';
+    else if (f.accion === 'asignada') accion = 'asignó / tomó';
+    else if (f.accion === 'estado') accion = `pasó a «${etiqueta('estado', f.estado_nuevo)}»`;
     return `
-      <div class="fila-feed">
-        <div class="feed-punto" style="background:${color}"></div>
+      <a class="fila-feed" href="incidencias.html?id=${f.id_incidencia}" style="text-decoration:none; color:inherit;">
+        <div class="feed-punto" style="background:${colores[f.accion] || 'var(--petrol)'}"></div>
         <div style="flex:1;">
-          <div>${texto}</div>
-          <div class="mono" style="font-size:11px; color:var(--ink-faint); margin-top:2px;">${i.tipo} · ${fecha}</div>
+          <div><strong>${escaparHtml(quien)}</strong> ${escaparHtml(accion)} · ${escaparHtml(etiqueta('tipo', f.tipo))} en ${escaparHtml(f.contenedor_ubicacion)}</div>
+          ${f.accion === 'comentario' && f.comentario ? `<div style="font-size:13px; color:var(--ink-soft);">${escaparHtml(f.comentario)}</div>` : ''}
+          <div class="mono" style="font-size:11px; color:var(--ink-faint); margin-top:2px;">#${f.id_incidencia} · ${escaparHtml(tiempoRelativo(f.creado_en))}</div>
         </div>
-      </div>
+      </a>
     `;
   }).join('');
 }
@@ -157,9 +148,9 @@ function pintarPendientes(pendientes) {
     return `
       <div class="tarjeta-item">
         <div>
-          <strong>${u.nombre} ${u.apellido}</strong>
+          <strong>${escaparHtml(u.nombre)} ${escaparHtml(u.apellido)}</strong>
           <div class="mono" style="font-size:12px; color:var(--ink-soft); margin-top:2px;">
-            ${u.email} · <span class="etiqueta-estado estado-activo mono">${u.tipo_usuario}</span>
+            ${escaparHtml(u.email)} · <span class="etiqueta-estado estado-activo mono">${escaparHtml(u.tipo_usuario)}</span>
           </div>
         </div>
         <div style="display:flex; gap:8px;">
@@ -192,10 +183,10 @@ function pintarUsuarios(usuarios) {
   tabla.innerHTML = usuarios.map(function (u) {
     return `
       <tr>
-        <td>${u.nombre} ${u.apellido}</td>
-        <td>${u.email}</td>
-        <td><span class="mono" style="font-size:12px;">${u.tipo_usuario}</span></td>
-        <td><span class="etiqueta-estado estado-${u.estado}">${u.estado}</span></td>
+        <td>${escaparHtml(u.nombre)} ${escaparHtml(u.apellido)}</td>
+        <td>${escaparHtml(u.email)}</td>
+        <td><span class="mono" style="font-size:12px;">${escaparHtml(u.tipo_usuario)}</span></td>
+        <td><span class="etiqueta-estado estado-${escaparHtml(u.estado)}">${escaparHtml(u.estado)}</span></td>
       </tr>
     `;
   }).join('');
@@ -208,21 +199,32 @@ function pintarAvisos(avisos) {
     return;
   }
   contenedor.innerHTML = avisos.map(function (a) {
-    const zona = a.nombre_zona ? `${a.nombre_zona}` : 'Toda la ciudad';
+    const zona = a.nombre_zona ? a.nombre_zona : 'Toda la ciudad';
     return `
-      <div class="tarjeta-item" style="flex-direction:column; align-items:flex-start;">
-        <strong>${a.titulo}</strong>
-        <p style="margin: 4px 0; color: var(--ink-soft); font-size: 14px;">${a.mensaje}</p>
-        <span class="mono" style="font-size:11px; color:var(--ink-faint);">${zona} · ${a.publicado_en}</span>
+      <div class="tarjeta-item" style="align-items:flex-start;">
+        <div>
+          <strong>${escaparHtml(a.titulo)}</strong>
+          <p style="margin: 4px 0; color: var(--ink-soft); font-size: 14px;">${escaparHtml(a.mensaje)}</p>
+          <span class="mono" style="font-size:11px; color:var(--ink-faint);">${escaparHtml(zona)} · ${escaparHtml(formatearFecha(a.publicado_en))}</span>
+        </div>
+        <button type="button" class="boton-contorno boton-peligro" data-retirar="${a.id_aviso}">Retirar</button>
       </div>
     `;
   }).join('');
+
+  contenedor.querySelectorAll('[data-retirar]').forEach(function (boton) {
+    boton.addEventListener('click', async function () {
+      if (!confirm('¿Retirar este aviso? Los vecinos dejarán de verlo.')) return;
+      await pedirJson(`${API_URL}/panel_admin.php?accion=retirar_aviso`, { method: 'POST', cuerpo: { id_aviso: Number(boton.dataset.retirar) } });
+      cargarPanel();
+    });
+  });
 }
 
 function pintarSelectZonas(zonas) {
   document.getElementById('aviso-zona').innerHTML =
     '<option value="">Toda la ciudad</option>' +
-    zonas.map(z => `<option value="${z.id_zona}">${z.nombre_zona}</option>`).join('');
+    zonas.map(z => `<option value="${z.id_zona}">${escaparHtml(z.nombre_zona)}</option>`).join('');
 }
 
 async function cargarPanel() {
@@ -230,7 +232,7 @@ async function cargarPanel() {
   const datos = await respuesta.json();
 
   if (!respuesta.ok) {
-    document.querySelector('main').innerHTML = `<div class="mensaje error">${datos.mensaje}</div>`;
+    document.querySelector('main').innerHTML = `<div class="mensaje error">${escaparHtml(datos.mensaje)}</div>`;
     return;
   }
 
@@ -239,6 +241,8 @@ async function cargarPanel() {
   document.getElementById('stat-camiones').textContent = datos.estadisticas.camiones;
   document.getElementById('stat-usuarios').textContent = datos.estadisticas.usuarios;
   document.getElementById('stat-incidencias').textContent = datos.estadisticas.incidencias_abiertas;
+  const criticos = document.getElementById('stat-criticos');
+  if (criticos) criticos.textContent = datos.estadisticas.contenedores_criticos;
 
   pintarProgresoSemanal(datos.progreso_semanal);
   pintarMapa(datos);
@@ -270,11 +274,11 @@ document.getElementById('form-aviso').addEventListener('submit', async function 
   const divMensaje = document.getElementById('mensaje-aviso');
 
   if (respuesta.ok && resultado.exito) {
-    divMensaje.innerHTML = `<div class="mensaje exito">${resultado.mensaje}</div>`;
+    divMensaje.innerHTML = `<div class="mensaje exito">${escaparHtml(resultado.mensaje)}</div>`;
     document.getElementById('form-aviso').reset();
     cargarPanel();
   } else {
-    divMensaje.innerHTML = `<div class="mensaje error">${resultado.mensaje}</div>`;
+    divMensaje.innerHTML = `<div class="mensaje error">${escaparHtml(resultado.mensaje)}</div>`;
   }
 });
 

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SiGeRU — Informes</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+  <nav class="barra-navegacion">
+    <span class="logo">SiGeRU <span>MONTEVIDEO</span></span>
+    <div class="enlaces"></div>
+  </nav>
+
+  <main class="ancho">
+    <div class="encabezado-pagina">
+      <div>
+        <div class="eyebrow">Informes</div>
+        <h2>Informes simples</h2>
+        <p>Listados de incidencias abiertas o cerradas y de recolecciones en un período. Se pueden imprimir o descargar en CSV para abrir con Excel.</p>
+      </div>
+    </div>
+
+    <section class="tarjeta no-imprimir">
+      <form id="form-informe" class="filtros">
+        <label>Informe
+          <select id="i-tipo">
+            <option value="incidencias">Incidencias</option>
+            <option value="recolecciones">Recolecciones</option>
+          </select>
+        </label>
+        <label class="solo-incidencias">Situación
+          <select id="i-situacion">
+            <option value="todas">Abiertas y cerradas</option>
+            <option value="abiertas">Solo abiertas</option>
+            <option value="cerradas">Solo cerradas</option>
+          </select>
+        </label>
+        <label>Desde <input type="date" id="i-desde" required></label>
+        <label>Hasta <input type="date" id="i-hasta" required></label>
+        <label>Zona <select id="i-zona"><option value="">Todas</option></select></label>
+        <label class="solo-incidencias">Tipo
+          <select id="i-tipo-incidencia">
+            <option value="">Todos</option>
+            <option value="desborde">Desborde</option>
+            <option value="rotura">Rotura</option>
+            <option value="falta_recoleccion">Falta de recolección</option>
+            <option value="otro">Otro</option>
+          </select>
+        </label>
+      </form>
+      <div class="grupo-botones" style="margin-top:16px;">
+        <button type="button" class="boton-chico" id="btn-generar">Generar informe</button>
+        <button type="button" class="boton-contorno" id="btn-csv">Descargar CSV</button>
+        <button type="button" class="boton-contorno" id="btn-imprimir">Imprimir / PDF</button>
+        <span class="mono" style="font-size:12px; color:var(--ink-faint);">Atajos:</span>
+        <button type="button" class="enlace-boton" data-periodo="mes">Este mes</button>
+        <button type="button" class="enlace-boton" data-periodo="anterior">Mes anterior</button>
+        <button type="button" class="enlace-boton" data-periodo="7">Últimos 7 días</button>
+        <button type="button" class="enlace-boton" data-periodo="30">Últimos 30 días</button>
+      </div>
+      <div id="mensaje-informe"></div>
+    </section>
+
+    <div id="resultado-informe"></div>
+  </main>
+
+  <footer class="pie-pagina">
+    <p>&copy; 2026 Light. Todos los derechos reservados.</p>
+    <p class="mono">SiGeRU · Sistema de Gestión de Residuos Urbanos</p>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/sesion.js"></script>
+  <script src="js/informes.js"></script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SiGeRU — Estadísticas</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+  <nav class="barra-navegacion">
+    <span class="logo">SiGeRU <span>MONTEVIDEO</span></span>
+    <div class="enlaces"></div>
+  </nav>
+
+  <main class="ancho">
+    <div class="encabezado-pagina">
+      <div>
+        <div class="eyebrow">Panel de control</div>
+        <h2>Estadísticas</h2>
+        <p>Cómo viene el mes: incidencias, desbordes, recolección y rendimiento de las cuadrillas, comparado con el mes anterior.</p>
+      </div>
+      <div class="selector-mes no-imprimir">
+        <label for="e-mes" class="mono" style="font-size:12px; color:var(--ink-soft);">MES</label>
+        <input type="month" id="e-mes" class="control">
+      </div>
+    </div>
+
+    <div class="grilla-kpi" id="kpis"></div>
+
+    <div class="grid-doble">
+      <section class="tarjeta">
+        <div class="eyebrow">Top del mes</div>
+        <h2 style="font-size:22px;">Contenedores más desbordados</h2>
+        <div id="top-desbordados"></div>
+      </section>
+      <section class="tarjeta">
+        <div class="eyebrow">Estado actual</div>
+        <h2 style="font-size:22px;">Contenedores</h2>
+        <div id="estado-contenedores"></div>
+      </section>
+    </div>
+
+    <section class="tarjeta">
+      <div class="eyebrow">Últimos 30 días</div>
+      <h2 style="font-size:22px;">Incidencias reportadas y resueltas por día</h2>
+      <div class="grafico-contenedor alto"><canvas id="g-evolucion" role="img" aria-label="Incidencias reportadas y resueltas por día"></canvas></div>
+      <details class="no-imprimir"><summary class="mono" style="font-size:12px; cursor:pointer; margin-top:10px;">Ver como tabla</summary><div id="t-evolucion"></div></details>
+    </section>
+
+    <div class="grid-doble">
+      <section class="tarjeta">
+        <div class="eyebrow">En el mes</div>
+        <h2 style="font-size:22px;">Incidencias por zona</h2>
+        <div class="grafico-contenedor"><canvas id="g-zonas" role="img" aria-label="Incidencias por zona"></canvas></div>
+        <details class="no-imprimir"><summary class="mono" style="font-size:12px; cursor:pointer; margin-top:10px;">Ver como tabla</summary><div id="t-zonas"></div></details>
+      </section>
+      <section class="tarjeta">
+        <div class="eyebrow">Últimos 30 días</div>
+        <h2 style="font-size:22px;">Incidencias por tipo</h2>
+        <div class="grafico-contenedor"><canvas id="g-tipos" role="img" aria-label="Incidencias por tipo"></canvas></div>
+        <details class="no-imprimir"><summary class="mono" style="font-size:12px; cursor:pointer; margin-top:10px;">Ver como tabla</summary><div id="t-tipos"></div></details>
+      </section>
+    </div>
+
+    <div class="grid-doble">
+      <section class="tarjeta">
+        <div class="eyebrow">Últimos 14 días</div>
+        <h2 style="font-size:22px;">Kilos recolectados por día</h2>
+        <div class="grafico-contenedor"><canvas id="g-kg" role="img" aria-label="Kilos recolectados por día"></canvas></div>
+        <details class="no-imprimir"><summary class="mono" style="font-size:12px; cursor:pointer; margin-top:10px;">Ver como tabla</summary><div id="t-kg"></div></details>
+      </section>
+      <section class="tarjeta">
+        <div class="eyebrow">Últimos 30 días</div>
+        <h2 style="font-size:22px;">Ocupación de centros de acopio</h2>
+        <div id="centros"></div>
+      </section>
+    </div>
+
+    <section class="tarjeta">
+      <div class="eyebrow">En el mes</div>
+      <h2 style="font-size:22px;">Rendimiento de las cuadrillas</h2>
+      <div class="tabla-desplazable">
+        <table class="listado">
+          <thead><tr><th>Cuadrilla</th><th>Incidencias resueltas</th><th>Tiempo promedio</th></tr></thead>
+          <tbody id="tabla-cuadrillas"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pie-pagina">
+    <p>&copy; 2026 Light. Todos los derechos reservados.</p>
+    <p class="mono">SiGeRU · Sistema de Gestión de Residuos Urbanos</p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/sesion.js"></script>
+  <script src="js/estadisticas.js"></script>
+</body>
+</html>

@@ -11,13 +11,7 @@
 
   <nav class="barra-navegacion">
     <span class="logo">SiGeRU <span>MONTEVIDEO</span></span>
-    <div class="enlaces">
-      <a href="panel-admin.html">Panel</a>
-      <a href="usuarios.html">Usuarios</a>
-      <a href="contenedores.html">Contenedores</a>
-      <a href="camiones.html">Camiones</a>
-      <a href="centros-acopio.html">Centros de Acopio</a>
-    </div>
+    <div class="enlaces"></div>
   </nav>
 
   <main>
@@ -30,6 +24,7 @@
       <div class="stat"><span class="numero" id="stat-camiones">–</span><span class="etiqueta">Camiones</span></div>
       <div class="stat"><span class="numero" id="stat-usuarios">–</span><span class="etiqueta">Usuarios</span></div>
       <div class="stat"><span class="numero" id="stat-incidencias">–</span><span class="etiqueta">Incidencias abiertas</span></div>
+      <div class="stat"><span class="numero" id="stat-criticos">–</span><span class="etiqueta">Contenedores críticos</span></div>
     </div>
 
     <section class="tarjeta">
@@ -42,14 +37,17 @@
     </section>
 
     <section class="tarjeta">
-      <h2 style="font-size: 22px;">Mapa operativo</h2>
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:18px;">
+        <h2 style="font-size: 22px; margin:0;">Mapa operativo</h2>
+        <a href="mapa.html" class="boton-contorno" style="text-decoration:none;">Abrir mapa interactivo →</a>
+      </div>
       <div id="mapa-contenedores" class="mapa"></div>
       <div class="leyenda-mapa">
         <span><i class="punto-leyenda" style="background:var(--clay)"></i> Contenedor desbordado</span>
         <span><i class="punto-leyenda" style="background:var(--amber)"></i> Contenedor roto</span>
         <span><i class="punto-leyenda" style="background:var(--petrol)"></i> Contenedor funcional</span>
-        <span><i class="punto-leyenda" style="background:#333"></i>🚛 Camión en servicio</span>
-        <span><i class="punto-leyenda" style="background:#666"></i>🏭 Centro de acopio</span>
+        <span>🚛 Camión en servicio</span>
+        <span>🏭 Centro de acopio</span>
       </div>
     </section>
 
@@ -82,6 +80,7 @@
     <section class="tarjeta">
       <div class="eyebrow">Comunicación</div>
       <h2 style="font-size: 22px;">Publicar aviso</h2>
+      <p style="color:var(--ink-soft); margin-top:0;">Además de mostrarse en el panel, el aviso llega como notificación a los vecinos de la zona elegida.</p>
       <form id="form-aviso" class="formulario">
         <div class="campo">
           <label for="aviso-titulo">Título</label>
@@ -89,7 +88,7 @@
         </div>
         <div class="campo">
           <label for="aviso-mensaje">Mensaje</label>
-          <input type="text" id="aviso-mensaje" required>
+          <input type="text" id="aviso-mensaje" required maxlength="500">
         </div>
         <div class="campo">
           <label for="aviso-zona">Zona (opcional)</label>
@@ -109,6 +108,26 @@
       <div class="eyebrow">Gestión</div>
       <h2 style="font-size: 22px;">Accesos rápidos</h2>
       <div class="grilla-roles grilla-roles-3">
+        <a href="estadisticas.html" class="tarjeta-rol" style="text-decoration:none;">
+          <div class="etiqueta-id mono">NUEVO</div>
+          <h3>Estadísticas</h3>
+          <p>Panel de control: top de contenedores desbordados del mes, evolución y rendimiento.</p>
+        </a>
+        <a href="incidencias.html" class="tarjeta-rol" style="text-decoration:none;">
+          <div class="etiqueta-id mono">NUEVO</div>
+          <h3>Incidencias</h3>
+          <p>Registro y seguimiento: asignar cuadrillas, cambiar estado y ver el historial.</p>
+        </a>
+        <a href="informes.html" class="tarjeta-rol" style="text-decoration:none;">
+          <div class="etiqueta-id mono">NUEVO</div>
+          <h3>Informes</h3>
+          <p>Incidencias abiertas/cerradas y recolecciones por período. CSV e impresión.</p>
+        </a>
+        <a href="recolecciones.html" class="tarjeta-rol" style="text-decoration:none;">
+          <div class="etiqueta-id mono">NUEVO</div>
+          <h3>Recolección</h3>
+          <p>Registrar vaciados, niveles de llenado e historial de recolecciones.</p>
+        </a>
         <a href="usuarios.html" class="tarjeta-rol" style="text-decoration:none;">
           <div class="etiqueta-id mono">ABM</div>
           <h3>Usuarios</h3>
