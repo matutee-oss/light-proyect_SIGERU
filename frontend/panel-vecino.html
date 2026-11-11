@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SiGeRU — Panel de vecino</title>
+  <link rel="stylesheet" href="css/estilos.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+</head>
+<body>
+
+  <nav class="barra-navegacion">
+    <span class="logo">SiGeRU <span>MONTEVIDEO</span></span>
+    <div class="enlaces">
+      <a href="login.html">Iniciar sesión</a>
+    </div>
+  </nav>
+
+  <main>
+    <div class="eyebrow" style="margin-top: 40px;">Vecino · Mi barrio</div>
+    <h2 style="font-size: 34px; margin-bottom: 24px;">Panel personal</h2>
+
+    <section class="tarjeta tarjeta-motivacional">
+      <div class="motivacional-contenido">
+        <div>
+          <div class="eyebrow" style="margin-bottom: 6px;">Tu impacto</div>
+          <h2 style="font-size: 28px; margin: 0;">Reportes tuyos que ya se resolvieron</h2>
+        </div>
+        <div class="motivacional-numero" id="numero-resueltos">–</div>
+      </div>
+      <p style="margin-top: 12px; color: var(--ink-soft);" id="motivacional-texto">Cargando…</p>
+    </section>
+
+    <section class="tarjeta" id="tarjeta-zona" style="display:none;">
+      <div class="eyebrow">Configuración inicial</div>
+      <h2 style="font-size: 22px;">¿En qué zona vivís?</h2>
+      <p style="color: var(--ink-soft);">Elegí tu zona para ver los contenedores cercanos y avisos que te correspondan.</p>
+      <form id="form-zona" class="formulario" style="margin-top: 16px;">
+        <div class="campo">
+          <label for="select-zona">Zona</label>
+          <select id="select-zona" required></select>
+        </div>
+        <button type="submit">Guardar zona</button>
+      </form>
+    </section>
+
+    <section class="tarjeta">
+      <div class="eyebrow">Comunicados de la Intendencia</div>
+      <h2 style="font-size: 22px;">Avisos vigentes</h2>
+      <div id="lista-avisos"></div>
+    </section>
+
+    <section class="tarjeta">
+      <div class="eyebrow">Mi zona</div>
+      <h2 style="font-size: 22px;">Contenedores cercanos</h2>
+      <p style="color: var(--ink-soft); margin-top: 0;">Tocá un contenedor del mapa para reportar un problema rápido.</p>
+      <div id="mapa-vecino" class="mapa"></div>
+      <div class="leyenda-mapa">
+        <span><i class="punto-leyenda" style="background:var(--clay)"></i> Desbordado</span>
+        <span><i class="punto-leyenda" style="background:var(--amber)"></i> Roto</span>
+        <span><i class="punto-leyenda" style="background:var(--petrol)"></i> Funcional</span>
+      </div>
+    </section>
+
+    <section class="tarjeta">
+      <div class="eyebrow">Reportar un problema</div>
+      <h2 style="font-size: 22px;">Nuevo reporte</h2>
+      <form id="form-reporte" class="formulario">
+        <div class="campo">
+          <label for="id_contenedor">Contenedor</label>
+          <select id="id_contenedor" required></select>
+        </div>
+        <div class="campo">
+          <label for="tipo">Qué pasa</label>
+          <select id="tipo" required>
+            <option value="desborde">Está desbordado</option>
+            <option value="rotura">Está roto</option>
+            <option value="falta_recoleccion">No pasó la recolección</option>
+            <option value="otro">Otro</option>
+          </select>
+        </div>
+        <button type="submit">Enviar reporte</button>
+      </form>
+      <div id="mensaje-reporte"></div>
+    </section>
+
+    <section class="tarjeta">
+      <h2 style="font-size: 22px;">Mis reportes anteriores</h2>
+      <div id="lista-reportes"></div>
+    </section>
+  </main>
+
+  <footer class="pie-pagina">
+    <p>&copy; 2026 Light. Todos los derechos reservados.</p>
+    <p class="mono">SiGeRU · Sistema de Gestión de Residuos Urbanos</p>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/sesion.js"></script>
+  <script src="js/panel-vecino.js"></script>
+</body>
+</html>

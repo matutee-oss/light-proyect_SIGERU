@@ -1,0 +1,24 @@
+# Dependencias PHP
+backend/vendor/
+backend/composer.lock
+
+# Archivos de ambiente
+.env
+*.env
+
+# Subidas de usuarios
+backend/uploads/perfiles/*.jpg
+backend/uploads/perfiles/*.png
+!backend/uploads/perfiles/.gitkeep
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Sistema
+.DS_Store
+Thumbs.db

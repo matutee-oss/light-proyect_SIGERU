@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SiGeRU — Registro</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body class="pagina-auth">
+
+  <nav class="barra-navegacion">
+    <span class="logo">SiGeRU <span>MONTEVIDEO</span></span>
+    <div class="enlaces">
+      <a href="index.html">Inicio</a>
+      <a href="login.html">Iniciar sesión</a>
+    </div>
+  </nav>
+
+  <div class="auth-wrapper">
+    <div class="auth-card">
+      <div class="auth-card-header">
+        <div class="auth-card-eyebrow">Alta de usuario</div>
+        <h1 class="auth-card-titulo">Crear cuenta</h1>
+      </div>
+
+      <form id="form-registro" class="auth-form">
+        <div class="auth-fila-doble">
+          <div class="auth-campo">
+            <label for="nombre">Nombre</label>
+            <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required>
+          </div>
+          <div class="auth-campo">
+            <label for="apellido">Apellido</label>
+            <input type="text" id="apellido" name="apellido" placeholder="Tu apellido" required>
+          </div>
+        </div>
+
+        <div class="auth-fila-doble">
+          <div class="auth-campo">
+            <label for="ci">Cédula de identidad</label>
+            <input type="text" id="ci" name="ci" placeholder="Ej: 1.234.567-8" required>
+          </div>
+          <div class="auth-campo">
+            <label for="telefono">Teléfono</label>
+            <input type="tel" id="telefono" name="telefono" placeholder="Ej: 099 123 456">
+          </div>
+        </div>
+
+        <div class="auth-campo">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="tu@email.com" required>
+        </div>
+
+        <div class="auth-campo">
+          <label for="password">Contraseña</label>
+          <input type="password" id="password" name="password" placeholder="Mínimo 6 caracteres" required minlength="6">
+        </div>
+
+        <div class="auth-campo">
+          <label for="tipo_usuario">Tipo de usuario</label>
+          <select id="tipo_usuario" name="tipo_usuario">
+            <option value="vecino">Vecino</option>
+            <option value="operario">Operario</option>
+            <option value="cuadrilla">Cuadrilla</option>
+            <option value="administrador">Administrador</option>
+          </select>
+        </div>
+
+        <div id="campo-codigo" class="auth-campo" style="display:none;">
+          <label for="codigo_funcionario">Código de funcionario</label>
+          <input type="text" id="codigo_funcionario" name="codigo_funcionario" placeholder="Provisto por la Intendencia">
+        </div>
+
+        <div id="campo-centro" class="auth-campo" style="display:none;">
+          <label for="id_centro">Centro de acopio (ID)</label>
+          <input type="number" id="id_centro" name="id_centro">
+        </div>
+
+        <button type="submit" class="auth-btn">Crear mi cuenta</button>
+      </form>
+
+      <div id="mensaje-registro" class="auth-mensaje"></div>
+
+      <p class="auth-footer-link">
+        ¿Ya tenés cuenta? <a href="login.html">Iniciar sesión</a>
+      </p>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/sesion.js"></script>
+  <script src="js/registro.js"></script>
+</body>
+</html>
