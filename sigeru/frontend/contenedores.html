@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SiGeRU — Contenedores</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+  <nav class="barra-navegacion">
+    <span class="logo">SiGeRU <span>MONTEVIDEO</span></span>
+    <div class="enlaces"></div>
+  </nav>
+
+  <main>
+    <div class="eyebrow" style="margin-top: 40px;">Gestión de infraestructura</div>
+    <h2 style="font-size: 34px; margin-bottom: 24px;">Contenedores</h2>
+
+    <section class="tarjeta">
+      <h2 style="font-size: 22px;" id="titulo-form-contenedor">Nuevo contenedor</h2>
+      <form id="form-contenedor" class="formulario">
+        <input type="hidden" id="contenedor-id">
+
+        <div class="campo">
+          <label for="ubicacion">Ubicación</label>
+          <input type="text" id="ubicacion" name="ubicacion" required>
+        </div>
+
+        <div class="campo">
+          <label for="tipo_residuo">Tipo de residuo</label>
+          <input type="text" id="tipo_residuo" name="tipo_residuo" required placeholder="Ej: Residuos comunes, Reciclables">
+        </div>
+
+        <div class="campo">
+          <label for="estado">Estado</label>
+          <select id="estado" name="estado">
+            <option value="funcional">Funcional</option>
+            <option value="roto">Roto</option>
+            <option value="desbordado">Desbordado</option>
+          </select>
+        </div>
+
+        <div class="campo">
+          <label for="id_zona">Zona</label>
+          <select id="id_zona" name="id_zona"><option value="">Sin zona</option></select>
+        </div>
+
+        <div class="campo">
+          <label for="capacidad_litros">Capacidad (litros)</label>
+          <input type="number" id="capacidad_litros" name="capacidad_litros" min="100" step="100" value="2400">
+        </div>
+
+        <div class="campo">
+          <label for="nivel_llenado">Nivel de llenado (%)</label>
+          <input type="number" id="nivel_llenado" name="nivel_llenado" min="0" max="100" value="0">
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+          <div class="campo">
+            <label for="latitud">Latitud (opcional)</label>
+            <input type="number" id="latitud" name="latitud" step="0.0000001" placeholder="-34.9011">
+          </div>
+          <div class="campo">
+            <label for="longitud">Longitud (opcional)</label>
+            <input type="number" id="longitud" name="longitud" step="0.0000001" placeholder="-56.1645">
+          </div>
+        </div>
+
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <button type="submit" id="btn-guardar-contenedor">Guardar contenedor</button>
+          <button type="button" id="btn-cancelar-contenedor" style="display:none; background:none; border:1px solid var(--ink-soft); color:var(--ink); padding:10px 20px; border-radius:var(--radio); cursor:pointer;">Cancelar</button>
+        </div>
+      </form>
+      <div id="mensaje-contenedor"></div>
+    </section>
+
+    <section class="tarjeta">
+      <h2 style="font-size: 22px;">Listado</h2>
+      <div class="filtros" style="margin-bottom:14px;">
+        <label>Zona <select id="filtro-zona"><option value="">Todas</option></select></label>
+        <label>Estado
+          <select id="filtro-estado">
+            <option value="">Todos</option>
+            <option value="funcional">Funcional</option>
+            <option value="roto">Roto</option>
+            <option value="desbordado">Desbordado</option>
+          </select>
+        </label>
+      </div>
+      <div class="tabla-desplazable">
+      <table class="listado">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Ubicación</th>
+            <th>Tipo de residuo</th>
+            <th>Estado</th>
+            <th>Zona</th>
+            <th>Nivel</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-contenedores"></tbody>
+      </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pie-pagina">
+    <p>&copy; 2026 Light. Todos los derechos reservados.</p>
+    <p class="mono">SiGeRU · Sistema de Gestión de Residuos Urbanos</p>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/sesion.js"></script>
+  <script src="js/contenedores.js"></script>
+</body>
+</html>

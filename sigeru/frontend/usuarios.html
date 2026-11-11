@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SiGeRU — Usuarios</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+  <nav class="barra-navegacion">
+    <span class="logo">SiGeRU <span>MONTEVIDEO</span></span>
+    <div class="enlaces"></div>
+  </nav>
+
+  <main>
+    <div class="eyebrow" style="margin-top: 40px;">Gestión del sistema</div>
+    <h2 style="font-size: 34px; margin-bottom: 24px;">Usuarios</h2>
+
+    <!-- FORMULARIO CREAR / EDITAR -->
+    <section class="tarjeta">
+      <h2 style="font-size: 22px;" id="titulo-form-usuario">Nuevo usuario</h2>
+      <form id="form-usuario" class="formulario">
+        <input type="hidden" id="usuario-id">
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+          <div class="campo">
+            <label for="u-nombre">Nombre</label>
+            <input type="text" id="u-nombre" required>
+          </div>
+          <div class="campo">
+            <label for="u-apellido">Apellido</label>
+            <input type="text" id="u-apellido" required>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+          <div class="campo">
+            <label for="u-ci">Cédula de identidad</label>
+            <input type="text" id="u-ci" required>
+          </div>
+          <div class="campo">
+            <label for="u-telefono">Teléfono</label>
+            <input type="tel" id="u-telefono">
+          </div>
+        </div>
+
+        <div class="campo">
+          <label for="u-email">Email</label>
+          <input type="email" id="u-email" required>
+        </div>
+
+        <div class="campo">
+          <label for="u-password">Contraseña <span id="label-password-hint" style="font-size:12px; color:var(--ink-soft);">(dejar vacío para no cambiar)</span></label>
+          <input type="password" id="u-password" minlength="8">
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+          <div class="campo">
+            <label for="u-tipo">Rol</label>
+            <select id="u-tipo" required>
+              <option value="vecino">Vecino</option>
+              <option value="cuadrilla">Cuadrilla</option>
+              <option value="operario">Operario</option>
+              <option value="administrador">Administrador</option>
+            </select>
+          </div>
+          <div class="campo">
+            <label for="u-estado">Estado</label>
+            <select id="u-estado" required>
+              <option value="activo">Activo</option>
+              <option value="pendiente">Pendiente</option>
+              <option value="inactivo">Inactivo</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="campo-centro-usuario" class="campo" style="display:none;">
+          <label for="u-id-centro">Centro de acopio (ID)</label>
+          <input type="number" id="u-id-centro">
+        </div>
+
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <button type="submit" id="btn-guardar-usuario">Guardar usuario</button>
+          <button type="button" id="btn-cancelar-usuario" style="display:none; background:none; border:1px solid var(--ink-soft); color:var(--ink); padding:10px 20px; border-radius:var(--radio); cursor:pointer;">Cancelar</button>
+        </div>
+      </form>
+      <div id="mensaje-usuario"></div>
+    </section>
+
+    <!-- TABLA DE USUARIOS -->
+    <section class="tarjeta">
+      <h2 style="font-size: 22px;">Todos los usuarios</h2>
+      <div id="filtros-usuario" style="display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap;">
+        <select id="filtro-rol" style="padding:8px 12px; border:1px solid var(--border); border-radius:var(--radio); background:var(--surface); color:var(--ink);">
+          <option value="">Todos los roles</option>
+          <option value="administrador">Administrador</option>
+          <option value="cuadrilla">Cuadrilla</option>
+          <option value="operario">Operario</option>
+          <option value="vecino">Vecino</option>
+        </select>
+        <select id="filtro-estado" style="padding:8px 12px; border:1px solid var(--border); border-radius:var(--radio); background:var(--surface); color:var(--ink);">
+          <option value="">Todos los estados</option>
+          <option value="activo">Activo</option>
+          <option value="pendiente">Pendiente</option>
+          <option value="inactivo">Inactivo</option>
+        </select>
+      </div>
+      <table class="listado">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>CI</th>
+            <th>Rol</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-usuarios"></tbody>
+      </table>
+      <p id="sin-usuarios" style="display:none; color:var(--ink-faint); font-size:13px;" class="mono">No hay usuarios que coincidan con los filtros.</p>
+    </section>
+  </main>
+
+  <footer class="pie-pagina">
+    <p>&copy; 2026 Light. Todos los derechos reservados.</p>
+    <p class="mono">SiGeRU · Sistema de Gestión de Residuos Urbanos</p>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/sesion.js"></script>
+  <script src="js/usuarios.js"></script>
+</body>
+</html>

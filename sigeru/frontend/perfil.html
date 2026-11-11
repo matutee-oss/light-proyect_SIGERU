@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SiGeRU — Mi perfil</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+  <nav class="barra-navegacion">
+    <span class="logo">SiGeRU <span>MONTEVIDEO</span></span>
+    <div class="enlaces"></div>
+  </nav>
+
+  <main>
+    <div class="eyebrow" style="margin-top: 40px;">Cuenta personal</div>
+    <h2 style="font-size: 34px; margin-bottom: 24px;">Mi perfil</h2>
+
+    <section class="tarjeta">
+      <div class="fila-perfil">
+        <div class="avatar-wrap">
+          <img id="foto-perfil" class="avatar" src="" alt="Foto de perfil">
+          <label for="input-foto" class="boton-secundario boton-avatar">Cambiar foto</label>
+          <input type="file" id="input-foto" accept="image/png, image/jpeg, image/webp" style="display:none;">
+        </div>
+        <div>
+          <div id="nombre-completo" style="font-family:'Barlow Condensed', sans-serif; font-size:26px; font-weight:700; color:var(--petrol-dark);"></div>
+          <div id="email-usuario" class="mono" style="font-size:13px; color:var(--ink-soft); margin-top:4px;"></div>
+          <span id="chip-tipo" class="etiqueta-estado" style="margin-top:10px; display:inline-block;"></span>
+        </div>
+      </div>
+      <div id="mensaje-foto"></div>
+    </section>
+
+    <section class="tarjeta">
+      <h2 style="font-size: 22px;">Datos personales</h2>
+      <form id="form-perfil" class="formulario">
+        <div class="campo">
+          <label for="nombre">Nombre</label>
+          <input type="text" id="nombre" required>
+        </div>
+        <div class="campo">
+          <label for="apellido">Apellido</label>
+          <input type="text" id="apellido" required>
+        </div>
+        <div class="campo">
+          <label for="telefono">Teléfono</label>
+          <input type="tel" id="telefono">
+        </div>
+        <button type="submit">Guardar cambios</button>
+      </form>
+      <div id="mensaje-perfil"></div>
+    </section>
+  </main>
+
+  <footer class="pie-pagina">
+    <p>&copy; 2026 Light. Todos los derechos reservados.</p>
+    <p class="mono">SiGeRU · Sistema de Gestión de Residuos Urbanos</p>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/sesion.js"></script>
+  <script src="js/perfil.js"></script>
+</body>
+</html>

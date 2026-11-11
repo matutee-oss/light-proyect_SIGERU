@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SiGeRU — Camiones</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+  <nav class="barra-navegacion">
+    <span class="logo">SiGeRU <span>MONTEVIDEO</span></span>
+    <div class="enlaces"></div>
+  </nav>
+
+  <main>
+    <div class="eyebrow" style="margin-top: 40px;">Gestión de flota</div>
+    <h2 style="font-size: 34px; margin-bottom: 24px;">Camiones</h2>
+
+    <section class="tarjeta">
+      <h2 style="font-size: 22px;" id="titulo-form-camion">Nuevo camión</h2>
+      <form id="form-camion" class="formulario">
+        <input type="hidden" id="camion-id">
+
+        <div class="campo">
+          <label for="matricula">Matrícula</label>
+          <input type="text" id="matricula" name="matricula" required placeholder="Ej: SBC 1234">
+        </div>
+
+        <div class="campo">
+          <label for="estado">Estado</label>
+          <select id="estado" name="estado">
+            <option value="disponible">Disponible</option>
+            <option value="en_ruta">En ruta</option>
+            <option value="mantenimiento">Mantenimiento</option>
+            <option value="fuera_servicio">Fuera de servicio</option>
+          </select>
+        </div>
+
+        <div class="campo">
+          <label for="capacidad_kg">Capacidad (kg)</label>
+          <input type="number" id="capacidad_kg" name="capacidad_kg" min="1" value="6000">
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+          <div class="campo">
+            <label for="latitud">Latitud (opcional)</label>
+            <input type="number" id="latitud" name="latitud" step="0.0000001">
+          </div>
+          <div class="campo">
+            <label for="longitud">Longitud (opcional)</label>
+            <input type="number" id="longitud" name="longitud" step="0.0000001">
+          </div>
+        </div>
+
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <button type="submit" id="btn-guardar-camion">Guardar camión</button>
+          <button type="button" id="btn-cancelar-camion" style="display:none; background:none; border:1px solid var(--ink-soft); color:var(--ink); padding:10px 20px; border-radius:var(--radio); cursor:pointer;">Cancelar</button>
+        </div>
+      </form>
+      <div id="mensaje-camion"></div>
+    </section>
+
+    <section class="tarjeta">
+      <h2 style="font-size: 22px;">Flota</h2>
+      <table class="listado">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Matrícula</th>
+            <th>Estado</th>
+            <th>Capacidad (kg)</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-camiones"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer class="pie-pagina">
+    <p>&copy; 2026 Light. Todos los derechos reservados.</p>
+    <p class="mono">SiGeRU · Sistema de Gestión de Residuos Urbanos</p>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/sesion.js"></script>
+  <script src="js/camiones.js"></script>
+</body>
+</html>

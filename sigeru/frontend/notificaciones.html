@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SiGeRU — Notificaciones</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+  <nav class="barra-navegacion">
+    <span class="logo">SiGeRU <span>MONTEVIDEO</span></span>
+    <div class="enlaces"></div>
+  </nav>
+
+  <main>
+    <div class="encabezado-pagina">
+      <div>
+        <div class="eyebrow">Sistema de alertas</div>
+        <h2>Notificaciones</h2>
+        <p>Avisos sobre incidencias, contenedores llenos, capacidad de los centros de acopio y comunicados de la Intendencia. Se actualizan solas cada 30 segundos.</p>
+      </div>
+      <div class="grupo-botones">
+        <select id="n-filtro" class="control" style="width:auto;">
+          <option value="">Todas</option>
+          <option value="1">Sin leer</option>
+        </select>
+        <button type="button" class="boton-contorno" id="btn-todas">Marcar todas como leídas</button>
+      </div>
+    </div>
+
+    <section class="tarjeta">
+      <div id="lista-notificaciones">
+        <p class="texto-vacio mono">Cargando…</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pie-pagina">
+    <p>&copy; 2026 Light. Todos los derechos reservados.</p>
+    <p class="mono">SiGeRU · Sistema de Gestión de Residuos Urbanos</p>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/sesion.js"></script>
+  <script src="js/notificaciones.js"></script>
+</body>
+</html>

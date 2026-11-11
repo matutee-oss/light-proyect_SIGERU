@@ -1,0 +1,26 @@
+# Dependencias PHP (se instalan con: cd backend && composer install)
+backend/vendor/
+backend/composer.lock
+backend/.phpunit.cache/
+backend/.phpunit.result.cache
+
+# Archivos de ambiente
+.env
+*.env
+!.env.example
+
+# Fotos de perfil subidas por los usuarios
+backend/uploads/perfiles/*
+!backend/uploads/perfiles/.gitkeep
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Sistema
+.DS_Store
+Thumbs.db

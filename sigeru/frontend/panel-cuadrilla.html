@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SiGeRU — Panel de cuadrilla</title>
+  <link rel="stylesheet" href="css/estilos.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+</head>
+<body>
+
+  <nav class="barra-navegacion">
+    <span class="logo">SiGeRU <span>MONTEVIDEO</span></span>
+    <div class="enlaces"></div>
+  </nav>
+
+  <main>
+    <div class="eyebrow" style="margin-top: 40px;">Cuadrilla · Trabajo en terreno</div>
+    <h2 style="font-size: 34px; margin-bottom: 24px;">Ruta del día</h2>
+
+    <div class="franja-stats">
+      <div class="stat"><span class="numero" id="stat-paradas">–</span><span class="etiqueta">Paradas totales</span></div>
+      <div class="stat"><span class="numero" id="stat-atendidas">–</span><span class="etiqueta">Atendidas</span></div>
+      <div class="stat"><span class="numero" id="stat-restantes">–</span><span class="etiqueta">Restantes</span></div>
+      <div class="stat"><span class="numero" id="stat-tiempo">–</span><span class="etiqueta">Tiempo estimado</span></div>
+    </div>
+
+    <section class="tarjeta" id="tarjeta-camion">
+      <div class="eyebrow">Vehículo asignado</div>
+      <div id="info-camion"></div>
+    </section>
+
+    <section class="tarjeta">
+      <h2 style="font-size: 22px;">Recorrido</h2>
+      <div id="mapa-ruta" class="mapa"></div>
+      <div class="leyenda-mapa">
+        <span><i class="punto-leyenda" style="background:var(--amber)"></i> Pendiente</span>
+        <span><i class="punto-leyenda" style="background:var(--petrol)"></i> Atendido</span>
+        <span><i class="punto-leyenda" style="background:var(--clay)"></i> Prioridad alta</span>
+      </div>
+    </section>
+
+    <section class="tarjeta">
+      <div class="eyebrow">Checklist</div>
+      <h2 style="font-size: 22px;">Paradas del recorrido</h2>
+      <p style="color:var(--ink-soft); margin-top:0;">Al marcar una parada se registra la recolección: el contenedor queda vacío y se resuelven sus desbordes.</p>
+      <div id="mensaje-ruta"></div>
+      <div id="lista-paradas"></div>
+    </section>
+
+    <section class="tarjeta">
+      <h2 style="font-size: 22px;">Incidencias asignadas a mí</h2>
+      <div id="lista-mias"></div>
+    </section>
+
+    <section class="tarjeta">
+      <h2 style="font-size: 22px;">Incidencias sin asignar</h2>
+      <div id="lista-disponibles"></div>
+    </section>
+  </main>
+
+  <footer class="pie-pagina">
+    <p>&copy; 2026 Light. Todos los derechos reservados.</p>
+    <p class="mono">SiGeRU · Sistema de Gestión de Residuos Urbanos</p>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/sesion.js"></script>
+  <script src="js/panel-cuadrilla.js"></script>
+</body>
+</html>

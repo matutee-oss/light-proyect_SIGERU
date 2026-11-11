@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SiGeRU — Panel de operario</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+  <nav class="barra-navegacion">
+    <span class="logo">SiGeRU <span>MONTEVIDEO</span></span>
+    <div class="enlaces"></div>
+  </nav>
+
+  <main>
+    <div class="eyebrow" style="margin-top: 40px;">Operario · Centro de acopio</div>
+    <h2 id="nombre-centro" style="font-size: 34px; margin-bottom: 24px;">Cargando…</h2>
+
+    <div id="contenido-operario">
+
+      <div id="alerta-capacidad" style="display:none;"></div>
+
+      <section class="tarjeta">
+        <div class="eyebrow">Estado actual</div>
+        <h2 style="font-size: 22px;">Capacidad del centro</h2>
+        <div class="medidor-capacidad">
+          <div class="medidor-capacidad-relleno" id="medidor-relleno" style="width: 0%;"></div>
+          <span class="medidor-capacidad-etiqueta" id="medidor-etiqueta">0%</span>
+        </div>
+        <p style="margin-top: 12px; color: var(--ink-soft);" id="capacidad-texto">Calculando…</p>
+      </section>
+
+      <div class="grid-doble">
+        <section class="tarjeta">
+          <div class="eyebrow">Datos del centro</div>
+          <h2 style="font-size: 22px;" id="datos-titulo">Información</h2>
+          <p><strong>Ubicación:</strong> <span id="ubicacion-centro"></span></p>
+          <p><strong>Capacidad total:</strong> <span id="capacidad-centro"></span></p>
+        </section>
+
+        <section class="tarjeta">
+          <div class="eyebrow">Últimos 7 días</div>
+          <h2 style="font-size: 22px;">Ingresos por día</h2>
+          <div id="grafico-ingresos"></div>
+        </section>
+      </div>
+
+      <section class="tarjeta">
+        <div class="eyebrow">Nuevo movimiento</div>
+        <h2 style="font-size: 22px;">Registrar ingreso al centro</h2>
+        <form id="form-ingreso" class="formulario">
+          <div class="campo">
+            <label for="toneladas">Toneladas</label>
+            <input type="number" id="toneladas" step="0.1" min="0.1" required>
+          </div>
+          <div class="campo">
+            <label for="id_camion">Camión</label>
+            <select id="id_camion">
+              <option value="">— sin especificar —</option>
+            </select>
+          </div>
+          <div class="campo">
+            <label for="observaciones">Observaciones</label>
+            <input type="text" id="observaciones" maxlength="255">
+          </div>
+          <button type="submit">Registrar ingreso</button>
+        </form>
+        <div id="mensaje-ingreso"></div>
+      </section>
+
+      <section class="tarjeta">
+        <h2 style="font-size: 22px;">Últimos ingresos</h2>
+        <table class="listado">
+          <thead>
+            <tr><th>Fecha</th><th>Toneladas</th><th>Camión</th><th>Obs.</th></tr>
+          </thead>
+          <tbody id="tabla-ingresos"></tbody>
+        </table>
+      </section>
+
+      <section class="tarjeta">
+        <div class="eyebrow">Inventario</div>
+        <h2 style="font-size: 22px;">Recursos disponibles</h2>
+        <table class="listado">
+          <thead>
+            <tr><th>Tipo</th><th>Cantidad</th><th></th></tr>
+          </thead>
+          <tbody id="tabla-recursos"></tbody>
+        </table>
+      </section>
+    </div>
+  </main>
+
+  <footer class="pie-pagina">
+    <p>&copy; 2026 Light. Todos los derechos reservados.</p>
+    <p class="mono">SiGeRU · Sistema de Gestión de Residuos Urbanos</p>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/sesion.js"></script>
+  <script src="js/panel-operario.js"></script>
+</body>
+</html>

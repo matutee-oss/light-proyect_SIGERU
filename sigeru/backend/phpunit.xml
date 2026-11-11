@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="tests/bootstrap.php"
+         colors="true"
+         testdox="true"
+         cacheDirectory=".phpunit.cache"
+         failOnWarning="true">
+    <testsuites>
+        <!-- Unitarios: sin base de datos (los modelos se reemplazan por dobles de prueba) -->
+        <testsuite name="unitarios">
+            <directory>tests/Unit</directory>
+        </testsuite>
+        <!-- Integración: CRUD contra MySQL real (se saltean si no hay base disponible) -->
+        <testsuite name="integracion">
+            <directory>tests/Integracion</directory>
+        </testsuite>
+    </testsuites>
+    <source>
+        <include>
+            <directory>controllers</directory>
+            <directory>models</directory>
+            <directory>services</directory>
+            <directory>helpers</directory>
+        </include>
+    </source>
+    <php>
+        <!-- Base de pruebas: se crea sola a partir de sigeru.sql. NUNCA apunta a la base real. -->
+        <env name="DB_TEST_HOST" value="127.0.0.1" force="false"/>
+        <env name="DB_TEST_PORT" value="3306" force="false"/>
+        <env name="DB_TEST_NAME" value="sigeru_test" force="false"/>
+        <env name="DB_TEST_USER" value="root" force="false"/>
+        <env name="DB_TEST_PASS" value="light" force="false"/>
+    </php>
+</phpunit>

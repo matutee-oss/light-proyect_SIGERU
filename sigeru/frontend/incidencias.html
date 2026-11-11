@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SiGeRU — Incidencias</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+  <nav class="barra-navegacion">
+    <span class="logo">SiGeRU <span>MONTEVIDEO</span></span>
+    <div class="enlaces"></div>
+  </nav>
+
+  <main class="ancho">
+    <div class="encabezado-pagina">
+      <div>
+        <div class="eyebrow">Registro y seguimiento</div>
+        <h2 id="titulo-pagina">Incidencias</h2>
+        <p id="subtitulo-pagina">Cada reporte queda registrado con su historial: quién lo reportó, qué cuadrilla lo tomó y cuándo se resolvió.</p>
+      </div>
+      <button type="button" class="boton-chico" id="btn-nueva">+ Reportar incidencia</button>
+    </div>
+
+    <section class="tarjeta" id="tarjeta-nueva" hidden>
+      <div class="eyebrow">Nuevo reporte</div>
+      <h2 style="font-size: 22px;">¿Qué problema encontraste?</h2>
+      <form id="form-nueva" class="formulario-grilla">
+        <label class="ancho-completo">Contenedor
+          <select id="n-contenedor" class="control" required></select>
+        </label>
+        <label>Tipo de problema
+          <select id="n-tipo" class="control" required>
+            <option value="desborde">Está desbordado</option>
+            <option value="rotura">Está roto</option>
+            <option value="falta_recoleccion">No pasó la recolección</option>
+            <option value="otro">Otro</option>
+          </select>
+        </label>
+        <label id="campo-prioridad">Prioridad
+          <select id="n-prioridad" class="control">
+            <option value="">Automática</option>
+            <option value="alta">Alta</option>
+            <option value="media">Media</option>
+            <option value="baja">Baja</option>
+          </select>
+        </label>
+        <label class="ancho-completo">Descripción <span style="text-transform:none; font-weight:400;">(opcional, obligatoria si elegís «Otro»)</span>
+          <textarea id="n-descripcion" class="control" maxlength="500" rows="3" placeholder="Ej.: hay bolsas en la vereda y el contenedor no cierra"></textarea>
+        </label>
+        <div class="grupo-botones ancho-completo">
+          <button type="submit" class="boton-chico">Enviar reporte</button>
+          <button type="button" class="boton-contorno" id="btn-cancelar-nueva">Cancelar</button>
+        </div>
+      </form>
+      <div id="mensaje-nueva"></div>
+    </section>
+
+    <section class="tarjeta">
+      <div class="filtros" id="filtros">
+        <label>Buscar
+          <input type="search" id="f-texto" placeholder="Calle o descripción">
+        </label>
+        <label id="f-vista-campo" hidden>Mostrar
+          <select id="f-vista">
+            <option value="todas">Todas</option>
+            <option value="mias">Asignadas a mí</option>
+            <option value="disponibles">Sin asignar</option>
+          </select>
+        </label>
+        <label>Estado
+          <select id="f-estado">
+            <option value="">Todos</option>
+            <option value="abierta">Abierta</option>
+            <option value="en_curso">En curso</option>
+            <option value="resuelta">Resuelta</option>
+          </select>
+        </label>
+        <label>Tipo
+          <select id="f-tipo">
+            <option value="">Todos</option>
+            <option value="desborde">Desborde</option>
+            <option value="rotura">Rotura</option>
+            <option value="falta_recoleccion">Falta de recolección</option>
+            <option value="otro">Otro</option>
+          </select>
+        </label>
+        <label>Prioridad
+          <select id="f-prioridad">
+            <option value="">Todas</option>
+            <option value="alta">Alta</option>
+            <option value="media">Media</option>
+            <option value="baja">Baja</option>
+          </select>
+        </label>
+        <label class="solo-admin" hidden>Zona
+          <select id="f-zona"><option value="">Todas</option></select>
+        </label>
+        <label class="solo-admin" hidden>Desde
+          <input type="date" id="f-desde">
+        </label>
+        <label class="solo-admin" hidden>Hasta
+          <input type="date" id="f-hasta">
+        </label>
+      </div>
+      <div class="resumen-mapa" id="resumen-lista"></div>
+    </section>
+
+    <div class="lista-incidencias" id="lista-incidencias">
+      <p class="texto-vacio mono">Cargando…</p>
+    </div>
+
+    <div class="modal" id="modal-incidencia" hidden role="dialog" aria-modal="true" aria-labelledby="modal-titulo">
+      <div class="modal-contenido">
+        <button type="button" class="modal-cerrar" id="modal-cerrar" aria-label="Cerrar">×</button>
+        <div id="modal-cuerpo"></div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="pie-pagina">
+    <p>&copy; 2026 Light. Todos los derechos reservados.</p>
+    <p class="mono">SiGeRU · Sistema de Gestión de Residuos Urbanos</p>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/sesion.js"></script>
+  <script src="js/incidencias.js"></script>
+</body>
+</html>

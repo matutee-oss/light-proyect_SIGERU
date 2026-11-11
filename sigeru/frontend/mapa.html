@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SiGeRU — Mapa interactivo</title>
+  <link rel="stylesheet" href="css/estilos.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+</head>
+<body>
+
+  <nav class="barra-navegacion">
+    <span class="logo">SiGeRU <span>MONTEVIDEO</span></span>
+    <div class="enlaces"></div>
+  </nav>
+
+  <main class="ancho">
+    <div class="encabezado-pagina">
+      <div>
+        <div class="eyebrow">Mapa interactivo</div>
+        <h2>Contenedores e incidencias</h2>
+        <p>Cada círculo es un contenedor (el número es su nivel de llenado) y cada rombo, una incidencia pendiente. Tocá cualquiera para ver el detalle.</p>
+      </div>
+      <span class="mono" id="actualizado" style="font-size:12px; color:var(--ink-faint);"></span>
+    </div>
+
+    <section class="tarjeta">
+      <div class="filtros">
+        <label>Zona
+          <select id="m-zona"><option value="">Todas</option></select>
+        </label>
+        <label>Estado del contenedor
+          <select id="m-estado">
+            <option value="">Todos</option>
+            <option value="funcional">Funcional</option>
+            <option value="desbordado">Desbordado</option>
+            <option value="roto">Roto</option>
+          </select>
+        </label>
+        <label>Nivel mínimo
+          <select id="m-nivel">
+            <option value="">Cualquiera</option>
+            <option value="50">50 % o más</option>
+            <option value="80">80 % o más</option>
+            <option value="100">Lleno</option>
+          </select>
+        </label>
+        <label>Tipo de incidencia
+          <select id="m-tipo">
+            <option value="">Todos</option>
+            <option value="desborde">Desborde</option>
+            <option value="rotura">Rotura</option>
+            <option value="falta_recoleccion">Falta de recolección</option>
+            <option value="otro">Otro</option>
+          </select>
+        </label>
+        <label>Prioridad
+          <select id="m-prioridad">
+            <option value="">Todas</option>
+            <option value="alta">Alta</option>
+            <option value="media">Media</option>
+            <option value="baja">Baja</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="mapa-capas" style="margin-top:18px;">
+        <label><input type="checkbox" id="capa-contenedores" checked> Contenedores</label>
+        <label><input type="checkbox" id="capa-incidencias" checked> Incidencias</label>
+        <label class="solo-personal" hidden><input type="checkbox" id="capa-camiones" checked> Camiones</label>
+        <label><input type="checkbox" id="capa-centros" checked> Centros de acopio</label>
+      </div>
+
+      <div id="mapa" class="mapa mapa-grande"></div>
+
+      <div class="leyenda-mapa">
+        <span><i class="punto-leyenda" style="background:var(--petrol)"></i> Contenedor funcional</span>
+        <span><i class="punto-leyenda" style="background:var(--clay)"></i> Contenedor desbordado</span>
+        <span><i class="punto-leyenda" style="background:var(--amber)"></i> Contenedor roto</span>
+        <span>◆ Incidencia (color = prioridad)</span>
+        <span class="solo-personal" hidden>🚛 Camión</span>
+        <span>🏭 Centro de acopio</span>
+      </div>
+
+      <div class="resumen-mapa" id="resumen-mapa"></div>
+    </section>
+
+    <section class="tarjeta">
+      <div class="eyebrow">Para atender primero</div>
+      <h2 style="font-size:22px;">Contenedores críticos</h2>
+      <div id="lista-criticos"></div>
+    </section>
+  </main>
+
+  <footer class="pie-pagina">
+    <p>&copy; 2026 Light. Todos los derechos reservados.</p>
+    <p class="mono">SiGeRU · Sistema de Gestión de Residuos Urbanos</p>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/sesion.js"></script>
+  <script src="js/mapa.js"></script>
+</body>
+</html>
